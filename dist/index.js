@@ -152,8 +152,7 @@ const path_1 = __importDefault(__nccwpck_require__(5622));
 const constants_1 = __nccwpck_require__(5105);
 const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
-    constructor() {
-    }
+    constructor() { }
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -182,7 +181,7 @@ class CodeSigner {
             let execCmd = path_1.default.join(archivePath, cmd);
             fs_1.default.chmodSync(execCmd, '0755');
             const shellCmd = (0, util_1.shell)();
-            execCmd = `${shellCmd}` + `${execCmd}`;
+            execCmd = shellCmd + ' ' + execCmd;
             return execCmd;
         });
     }
