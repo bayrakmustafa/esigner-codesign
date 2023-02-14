@@ -148,8 +148,10 @@ class CodeSigner {
             (0, fs_1.mkdirSync)(codesigner);
             const downloadedPath = yield tc.downloadTool(link);
             yield (0, util_1.extractZip)(downloadedPath, codesigner);
+            core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
             const execCommand = path_1.default.join(codesigner, command);
             const contents = (0, fs_1.readFileSync)('conf/code_sign_tool.properties');
+            core.info(contents.toString());
             return codesigner;
         });
     }
