@@ -54,6 +54,7 @@ export class CodeSigner {
         fs.chmodSync(execCmd, '0755');
 
         const shellCmd = shell();
+        core.info(`Shell Cmd: ${shellCmd}`);
         execCmd = shellCmd + ' ' + execCmd;
         return execCmd;
     }

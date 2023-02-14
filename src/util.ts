@@ -92,14 +92,14 @@ export const shell = () => {
 
     try {
         const shell = userInfo();
-        if (shell) return shell;
+        if (shell) return shell.shell;
     } catch {
         //Ignored
     }
 
     if (platform === MACOS) {
-        return env.SHELL || '/bin/zsh';
+        return env.SHELL ?? '/bin/zsh';
     }
 
-    return env.SHELL || '/bin/sh';
+    return env.SHELL ?? '/bin/sh';
 };
