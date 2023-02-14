@@ -35,7 +35,6 @@ export class CodeSigner {
         const archiveName = fs.readdirSync(extractedCodeSignPath)[0];
         const archivePath = path.join(extractedCodeSignPath, archiveName);
         core.info(`Archive name: ${archiveName}, ${archivePath}`);
-
         listFiles(archivePath);
 
         const environment = core.getInput(INPUT_ENVIRONMENT_NAME) ?? PRODUCTION_ENVIRONMENT_NAME;
@@ -47,6 +46,9 @@ export class CodeSigner {
 
         core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
         copyFileSync(sourceConfig, destConfig);
+
+        core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
+        process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
 
         return path.join(archivePath, command);
     }

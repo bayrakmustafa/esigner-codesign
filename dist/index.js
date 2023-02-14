@@ -66,20 +66,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
+const exec = __importStar(__nccwpck_require__(1514));
 const constants_1 = __nccwpck_require__(5105);
 const codesigner_1 = __nccwpck_require__(6598);
 const installer_1 = __nccwpck_require__(2507);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const inputCommand = core.getInput(constants_1.INPUT_COMMAND);
+            let command = '';
+            command = `${command} ${core.getInput(constants_1.INPUT_COMMAND)}`;
+            //command = `${command} -username ${core.getInput(INPUT_USERNAME)}`;
+            //command = `${command} -password ${core.getInput(INPUT_PASSWORD)}`;
+            //command = `${command} -credential_id ${core.getInput(INPUT_CREDENTIAL_ID)}`;
+            //command = `${command} -totp_secret ${core.getInput(INPUT_TOTP_SECRET)}`;
+            //command = `${command} -program_name ${core.getInput(INPUT_PROGRAM_NAME)}`;
+            //command = `${command} -input_file_path ${core.getInput(INPUT_FILE_PATH)}`;
+            //command = `${command} -output_dir_path ${core.getInput(INPUT_OUTPUT_PATH)}`;
+            //command = `${command} -malware_block=${core.getInput(INPUT_MALWARE_BLOCK)}`;
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
             const codesigner = new codesigner_1.CodeSigner();
-            const command = yield codesigner.install();
-            core.info(`Command: ${command}`);
+            const execCommand = yield codesigner.install();
+            command = `${execCommand} ${command}`;
+            core.info(`CodeSigner Command: ${command}`);
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setupJava();
+            const result = yield exec.exec(command);
+            core.info(result.toString());
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
@@ -163,6 +176,8 @@ class CodeSigner {
             const destConfig = path_1.default.join(archivePath, 'conf/code_sign_tool.properties');
             core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
             (0, fs_1.copyFileSync)(sourceConfig, destConfig);
+            core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
+            process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
             return path_1.default.join(archivePath, command);
         });
     }
