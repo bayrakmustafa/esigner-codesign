@@ -149,10 +149,13 @@ class CodeSigner {
             const codesigner = path_1.default.join(os_1.default.homedir(), 'codesign');
             core.info(`Creating CodeSignTool extract path ${codesigner}`);
             (0, fs_1.mkdirSync)(codesigner);
-            const downloadedPath = yield tc.downloadTool(link);
-            yield (0, util_1.extractZip)(downloadedPath, codesigner);
+            const downloadedPath = yield tc.downloadTool(link, (0, util_1.getTempDir)());
+            const extractedCodeSignPath = yield (0, util_1.extractZip)(downloadedPath, codesigner);
             core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
-            fs_1.default.readdirSync(codesigner).forEach(file => {
+            const archiveName = fs_1.default.readdirSync(extractedCodeSignPath)[0];
+            const archivePath = path_1.default.join(extractedCodeSignPath, archiveName);
+            core.info(`Archive name: ${archiveName}, ${archivePath}`);
+            fs_1.default.readdirSync(downloadedPath).forEach(file => {
                 core.info(`File: ${file}`);
             });
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;

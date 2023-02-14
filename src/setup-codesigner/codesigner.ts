@@ -14,7 +14,7 @@ import {
     WINDOWS
 } from '../constants';
 
-import { extractZip, getPlatform } from '../util';
+import {extractZip, getPlatform, getTempDir} from '../util';
 
 export class CodeSigner {
     constructor() {}
@@ -28,11 +28,16 @@ export class CodeSigner {
         core.info(`Creating CodeSignTool extract path ${codesigner}`);
         mkdirSync(codesigner);
 
-        const downloadedPath = await tc.downloadTool(link);
-        await extractZip(downloadedPath, codesigner);
+        const downloadedPath = await tc.downloadTool(link, getTempDir());
+
+        const extractedCodeSignPath = await extractZip(downloadedPath, codesigner);
         core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
 
-        fs.readdirSync(codesigner).forEach(file => {
+        const archiveName = fs.readdirSync(extractedCodeSignPath)[0];
+        const archivePath = path.join(extractedCodeSignPath, archiveName);
+        core.info(`Archive name: ${archiveName}, ${archivePath}`);
+
+        fs.readdirSync(downloadedPath).forEach(file => {
             core.info(`File: ${file}`);
         });
 
