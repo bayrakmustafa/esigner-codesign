@@ -28,16 +28,16 @@ export class CodeSigner {
         core.info(`Creating CodeSignTool extract path ${codesigner}`);
         mkdirSync(codesigner);
 
-        const downloadedPath = await tc.downloadTool(link);
+        const downloadedFile = await tc.downloadTool(link);
 
-        const extractedCodeSignPath = await extractZip(downloadedPath, codesigner);
-        core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
+        const extractedCodeSignPath = await extractZip(downloadedFile, codesigner);
+        core.info(`Extract CodeSignTool from download path ${downloadedFile} to ${codesigner}`);
 
         const archiveName = fs.readdirSync(extractedCodeSignPath)[0];
         const archivePath = path.join(extractedCodeSignPath, archiveName);
         core.info(`Archive name: ${archiveName}, ${archivePath}`);
 
-        fs.readdirSync(downloadedPath).forEach(file => {
+        fs.readdirSync(archivePath).forEach(file => {
             core.info(`File: ${file}`);
         });
 
