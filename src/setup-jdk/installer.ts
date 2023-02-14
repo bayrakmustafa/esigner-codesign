@@ -7,7 +7,7 @@ import { JavaBase } from './base-installer';
 import { JavaDownloadRelease, JavaInstallerResults } from './base-models';
 import { ICorrettoAllAvailableVersions, ICorrettoAvailableVersions } from './models';
 
-export class CorrettoDistribution extends JavaBase {
+export class JavaDistribution extends JavaBase {
     constructor() {
         super('Corretto');
     }
@@ -120,7 +120,6 @@ export class CorrettoDistribution extends JavaBase {
     }
 
     private getPlatformOption(): string {
-        // Corretto has its own platform names so we need to map them
         switch (process.platform) {
             case 'darwin':
                 return 'macos';

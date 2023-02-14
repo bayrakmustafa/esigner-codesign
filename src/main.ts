@@ -1,18 +1,15 @@
 import * as core from '@actions/core';
-import { wait } from './wait';
-import { CorrettoDistribution } from './setup-jdk/installer';
+import { INPUT_COMMAND } from './constants';
+import { JavaDistribution } from './setup-jdk/installer';
 
 async function run(): Promise<void> {
     try {
-        const ms: string = core.getInput('milliseconds');
-        core.debug(`Waiting ${ms} milliseconds ...`);
+        const command: string = core.getInput(INPUT_COMMAND);
+        core.debug('Run CodeSigner');
+        core.debug('Running ESigner.com CodeSign Action ====>');
 
-        core.info(new Date().toTimeString());
-        await wait(parseInt(ms, 10));
-        core.debug(new Date().toTimeString());
-
-        const distribution = new CorrettoDistribution();
-        const result = await distribution.setupJava();
+        const distribution = new JavaDistribution();
+        await distribution.setupJava();
 
         core.setOutput('time', new Date().toTimeString());
     } catch (error) {

@@ -3,8 +3,8 @@ import path from 'path';
 import * as fs from 'fs';
 import * as semver from 'semver';
 import * as core from '@actions/core';
-
 import * as tc from '@actions/tool-cache';
+import { MACOS, UNIX, WINDOWS } from './constants';
 
 export function getTempDir() {
     return process.env['RUNNER_TEMP'] || os.tmpdir();
@@ -33,6 +33,10 @@ export async function extractJdkFile(toolPath: string, extension?: string) {
     }
 }
 
+export async function extractZip(toolPath: string, destPath: string) {
+    return await tc.extractZip(toolPath, destPath);
+}
+
 export function getDownloadArchiveExtension() {
     return process.platform === 'win32' ? 'zip' : 'tar.gz';
 }
@@ -56,4 +60,15 @@ export function getToolCachePath(toolName: string, version: string, architecture
     }
 
     return null;
+}
+
+export function getPlatform(): string {
+    switch (process.platform) {
+        case 'darwin':
+            return MACOS;
+        case 'win32':
+            return WINDOWS;
+        default:
+            return UNIX;
+    }
 }
