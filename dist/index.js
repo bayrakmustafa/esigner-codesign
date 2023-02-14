@@ -181,6 +181,7 @@ class CodeSigner {
             let execCmd = path_1.default.join(archivePath, cmd);
             fs_1.default.chmodSync(execCmd, '0755');
             const shellCmd = (0, util_1.shell)();
+            core.info(`Shell Cmd: ${shellCmd}`);
             execCmd = shellCmd + ' ' + execCmd;
             return execCmd;
         });
@@ -653,6 +654,7 @@ function listFiles(path, debug = false) {
 }
 exports.listFiles = listFiles;
 const shell = () => {
+    var _a, _b;
     const { env } = process;
     const platform = getPlatform();
     if (platform == constants_1.WINDOWS) {
@@ -661,15 +663,15 @@ const shell = () => {
     try {
         const shell = (0, os_1.userInfo)();
         if (shell)
-            return shell;
+            return shell.shell;
     }
-    catch (_a) {
+    catch (_c) {
         //Ignored
     }
     if (platform === constants_1.MACOS) {
-        return env.SHELL || '/bin/zsh';
+        return (_a = env.SHELL) !== null && _a !== void 0 ? _a : '/bin/zsh';
     }
-    return env.SHELL || '/bin/sh';
+    return (_b = env.SHELL) !== null && _b !== void 0 ? _b : '/bin/sh';
 };
 exports.shell = shell;
 
