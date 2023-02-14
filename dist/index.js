@@ -86,11 +86,11 @@ function run() {
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
             const codesigner = new codesigner_1.CodeSigner();
-            const execCommand = yield codesigner.install();
+            const execCommand = yield codesigner.setup();
             command = `${execCommand} ${command}`;
             core.info(`CodeSigner Command: ${command}`);
             const distribution = new installer_1.JavaDistribution();
-            yield distribution.setupJava();
+            yield distribution.setup();
             const result = yield exec.exec(command);
             core.info(result.toString());
             core.setOutput('time', new Date().toTimeString());
@@ -153,7 +153,7 @@ const constants_1 = __nccwpck_require__(5105);
 const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
     constructor() { }
-    install() {
+    setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
@@ -178,7 +178,13 @@ class CodeSigner {
             (0, fs_1.copyFileSync)(sourceConfig, destConfig);
             core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
             process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
-            return path_1.default.join(archivePath, command);
+            const execCommand = path_1.default.join(archivePath, command);
+            fs_1.default.chmod(execCommand, '0755', (error) => {
+                if (error) {
+                    core.error(error);
+                }
+            });
+            return execCommand;
         });
     }
 }
@@ -246,7 +252,7 @@ class JavaBase {
         this.packageType = 'jdk';
         this.checkLatest = false;
     }
-    setupJava() {
+    setup() {
         return __awaiter(this, void 0, void 0, function* () {
             let foundJava = this.findInToolCache();
             if (foundJava && !this.checkLatest) {

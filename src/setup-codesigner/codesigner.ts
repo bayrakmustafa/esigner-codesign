@@ -19,7 +19,7 @@ import { extractZip, getPlatform, getTempDir, listFiles } from '../util';
 export class CodeSigner {
     constructor() {}
 
-    public async install(): Promise<string> {
+    public async setup(): Promise<string> {
         let link = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_SETUP : CODESIGNTOOL_UNIX_SETUP;
         let command = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_EXEC : CODESIGNTOOL_UNIX_EXEC;
         core.info(`Downloading CodeSignTool from ${link}`);
@@ -50,6 +50,13 @@ export class CodeSigner {
         core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
         process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
 
-        return path.join(archivePath, command);
+        const execCommand = path.join(archivePath, command);
+        fs.chmod(execCommand, '0755', error => {
+            if (error) {
+                core.error(error);
+            }
+        });
+
+        return execCommand;
     }
 }

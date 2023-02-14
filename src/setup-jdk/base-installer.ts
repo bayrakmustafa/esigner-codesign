@@ -33,7 +33,7 @@ export abstract class JavaBase {
 
     protected abstract findPackageForDownload(range: string): Promise<JavaDownloadRelease>;
 
-    public async setupJava(): Promise<JavaInstallerResults> {
+    public async setup(): Promise<JavaInstallerResults> {
         let foundJava = this.findInToolCache();
         if (foundJava && !this.checkLatest) {
             core.info(`Resolved Java ${foundJava.version} from tool-cache`);

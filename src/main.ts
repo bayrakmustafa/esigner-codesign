@@ -31,13 +31,13 @@ async function run(): Promise<void> {
         core.debug('Running ESigner.com CodeSign Action ====>');
 
         const codesigner = new CodeSigner();
-        const execCommand = await codesigner.install();
+        const execCommand = await codesigner.setup();
 
         command = `${execCommand} ${command}`;
         core.info(`CodeSigner Command: ${command}`);
 
         const distribution = new JavaDistribution();
-        await distribution.setupJava();
+        await distribution.setup();
 
         const result = await exec.exec(command);
         core.info(result.toString());
