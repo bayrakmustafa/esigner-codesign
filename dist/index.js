@@ -133,7 +133,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CodeSigner = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
-const fs_1 = __nccwpck_require__(5747);
+const fs_1 = __importStar(__nccwpck_require__(5747));
 const os_1 = __importDefault(__nccwpck_require__(2087));
 const path_1 = __importDefault(__nccwpck_require__(5622));
 const constants_1 = __nccwpck_require__(5105);
@@ -152,6 +152,9 @@ class CodeSigner {
             const downloadedPath = yield tc.downloadTool(link);
             yield (0, util_1.extractZip)(downloadedPath, codesigner);
             core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
+            fs_1.default.readdirSync(codesigner).forEach(file => {
+                core.info(`File: ${file}`);
+            });
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
                 ? 'conf/code_sign_tool.properties'

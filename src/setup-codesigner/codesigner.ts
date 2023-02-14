@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
-import { copyFileSync, mkdirSync, readFileSync } from 'fs';
+import fs, { copyFileSync, mkdirSync } from 'fs';
 import os from 'os';
 import path from 'path';
 import {
@@ -31,6 +31,10 @@ export class CodeSigner {
         const downloadedPath = await tc.downloadTool(link);
         await extractZip(downloadedPath, codesigner);
         core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
+
+        fs.readdirSync(codesigner).forEach(file => {
+            core.info(`File: ${file}`);
+        });
 
         const environment = core.getInput(INPUT_ENVIRONMENT_NAME) ?? PRODUCTION_ENVIRONMENT_NAME;
         const sourceConfig =
