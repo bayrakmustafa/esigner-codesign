@@ -72,3 +72,12 @@ export function getPlatform(): string {
             return UNIX;
     }
 }
+
+export function listFiles(path: string, debug: boolean = false): void {
+    const files = fs.readdirSync(path);
+    if (debug) {
+        files.forEach(file => {
+            core.debug(`File: ${file}`);
+        });
+    }
+}

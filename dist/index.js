@@ -77,7 +77,7 @@ function run() {
             core.debug('Running ESigner.com CodeSign Action ====>');
             const codesigner = new codesigner_1.CodeSigner();
             const command = yield codesigner.install();
-            core.info(`Command: {command}`);
+            core.info(`Command: ${command}`);
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setupJava();
             core.setOutput('time', new Date().toTimeString());
@@ -155,9 +155,7 @@ class CodeSigner {
             const archiveName = fs_1.default.readdirSync(extractedCodeSignPath)[0];
             const archivePath = path_1.default.join(extractedCodeSignPath, archiveName);
             core.info(`Archive name: ${archiveName}, ${archivePath}`);
-            fs_1.default.readdirSync(archivePath).forEach(file => {
-                core.info(`File: ${file}`);
-            });
+            (0, util_1.listFiles)(archivePath);
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
                 ? 'conf/code_sign_tool.properties'
@@ -548,7 +546,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
+exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
 const os_1 = __importDefault(__nccwpck_require__(2087));
 const path_1 = __importDefault(__nccwpck_require__(5622));
 const fs = __importStar(__nccwpck_require__(5747));
@@ -626,6 +624,15 @@ function getPlatform() {
     }
 }
 exports.getPlatform = getPlatform;
+function listFiles(path, debug = false) {
+    const files = fs.readdirSync(path);
+    if (debug) {
+        files.forEach(file => {
+            core.debug(`File: ${file}`);
+        });
+    }
+}
+exports.listFiles = listFiles;
 
 
 /***/ }),

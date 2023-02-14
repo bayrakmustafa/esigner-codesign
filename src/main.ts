@@ -11,7 +11,7 @@ async function run(): Promise<void> {
 
         const codesigner = new CodeSigner();
         const command = await codesigner.install();
-        core.info(`Command: {command}`);
+        core.info(`Command: ${command}`);
 
         const distribution = new JavaDistribution();
         await distribution.setupJava();
