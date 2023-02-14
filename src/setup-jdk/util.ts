@@ -6,7 +6,7 @@ import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 
 import * as tc from '@actions/tool-cache';
-import {DISTRIBUTIONS_ONLY_MAJOR_VERSION, INPUT_JOB_STATUS} from './constants';
+import { DISTRIBUTIONS_ONLY_MAJOR_VERSION, INPUT_JOB_STATUS } from './constants';
 
 export function getTempDir() {
     return process.env['RUNNER_TEMP'] || os.tmpdir();
@@ -61,8 +61,8 @@ export function isVersionSatisfies(range: string, version: string): boolean {
 }
 
 export function getToolcachePath(toolName: string, version: string, architecture: string) {
-    const toolcacheRoot = process.env['RUNNER_TOOL_CACHE'] ?? '';
-    const fullPath = path.join(toolcacheRoot, toolName, version, architecture);
+    const toolCacheRoot = process.env['RUNNER_TOOL_CACHE'] ?? '';
+    const fullPath = path.join(toolCacheRoot, toolName, version, architecture);
     if (fs.existsSync(fullPath)) {
         return fullPath;
     }
@@ -97,10 +97,7 @@ export function isCacheFeatureAvailable(): boolean {
     return false;
 }
 
-export function getVersionFromFileContent(
-    content: string,
-    distributionName: string
-): string | null {
+export function getVersionFromFileContent(content: string, distributionName: string): string | null {
     const javaVersionRegExp = /(?<version>(?<=(^|\s|\-))(\d+\S*))(\s|$)/;
     const fileContent = content.match(javaVersionRegExp)?.groups?.version
         ? (content.match(javaVersionRegExp)?.groups?.version as string)

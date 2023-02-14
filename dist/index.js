@@ -115,9 +115,9 @@ class JavaBase {
             allowRetries: true,
             maxRetries: 3
         });
-        ({ version: this.version, stable: this.stable } = this.normalizeVersion("11"));
+        ({ version: this.version, stable: this.stable } = this.normalizeVersion('11'));
         this.architecture = os_1.default.arch();
-        this.packageType = "jdk";
+        this.packageType = 'jdk';
         this.checkLatest = false;
     }
     setupJava() {
@@ -149,7 +149,7 @@ class JavaBase {
             return foundJava;
         });
     }
-    get toolcacheFolderName() {
+    get toolCacheFolderName() {
         return `Java_${this.distribution}_${this.packageType}`;
     }
     getToolcacheVersionName(version) {
@@ -162,25 +162,25 @@ class JavaBase {
             }
         }
         // Kotlin and some Java dependencies don't work properly when Java path contains "+" sign
-        // so replace "/hostedtoolcache/Java/11.0.3+4/x64" to "/hostedtoolcache/Java/11.0.3-4/x64" when saves to cache
+        // so replace "/hostedtoolCache/Java/11.0.3+4/x64" to "/hostedtoolCache/Java/11.0.3-4/x64" when saves to cache
         // related issue: https://github.com/actions/virtual-environments/issues/3014
         return version.replace('+', '-');
     }
     findInToolcache() {
         // we can't use tc.find directly because firstly, we need to filter versions by stability flag
-        // if *-ea is provided, take only ea versions from toolcache, otherwise - only stable versions
+        // if *-ea is provided, take only ea versions from toolCache, otherwise - only stable versions
         const availableVersions = tc
-            .findAllVersions(this.toolcacheFolderName, this.architecture)
+            .findAllVersions(this.toolCacheFolderName, this.architecture)
             .map(item => {
             return {
                 version: item
                     .replace('-ea.', '+')
                     .replace(/-ea$/, '')
                     // Kotlin and some Java dependencies don't work properly when Java path contains "+" sign
-                    // so replace "/hostedtoolcache/Java/11.0.3-4/x64" to "/hostedtoolcache/Java/11.0.3+4/x64" when retrieves  to cache
+                    // so replace "/hostedtoolCache/Java/11.0.3-4/x64" to "/hostedtoolCache/Java/11.0.3+4/x64" when retrieves  to cache
                     // related issue: https://github.com/actions/virtual-environments/issues/3014
                     .replace('-', '+'),
-                path: (0, util_1.getToolcachePath)(this.toolcacheFolderName, item, this.architecture) || '',
+                path: (0, util_1.getToolcachePath)(this.toolCacheFolderName, item, this.architecture) || '',
                 stable: !item.includes('-ea')
             };
         })
@@ -345,7 +345,7 @@ class CorrettoDistribution extends base_installer_1.JavaBase {
             const archiveName = fs_1.default.readdirSync(extractedJavaPath)[0];
             const archivePath = path_1.default.join(extractedJavaPath, archiveName);
             const version = this.getToolcacheVersionName(javaRelease.version);
-            const javaPath = yield tc.cacheDir(archivePath, this.toolcacheFolderName, version, this.architecture);
+            const javaPath = yield tc.cacheDir(archivePath, this.toolCacheFolderName, version, this.architecture);
             return { version: javaRelease.version, path: javaPath };
         });
     }
@@ -369,9 +369,7 @@ class CorrettoDistribution extends base_installer_1.JavaBase {
             const resolvedVersion = matchingVersions.length > 0 ? matchingVersions[0] : null;
             if (!resolvedVersion) {
                 const availableOptions = availableVersions.map(item => item.version).join(', ');
-                const availableOptionsMessage = availableOptions
-                    ? `\nAvailable versions: ${availableOptions}`
-                    : '';
+                const availableOptionsMessage = availableOptions ? `\nAvailable versions: ${availableOptions}` : '';
                 throw new Error(`Could not find satisfied version for SemVer '${version}'. ${availableOptionsMessage}`);
             }
             return resolvedVersion;
@@ -557,8 +555,8 @@ function isVersionSatisfies(range, version) {
 exports.isVersionSatisfies = isVersionSatisfies;
 function getToolcachePath(toolName, version, architecture) {
     var _a;
-    const toolcacheRoot = (_a = process.env['RUNNER_TOOL_CACHE']) !== null && _a !== void 0 ? _a : '';
-    const fullPath = path_1.default.join(toolcacheRoot, toolName, version, architecture);
+    const toolCacheRoot = (_a = process.env['RUNNER_TOOL_CACHE']) !== null && _a !== void 0 ? _a : '';
+    const fullPath = path_1.default.join(toolCacheRoot, toolName, version, architecture);
     if (fs.existsSync(fullPath)) {
         return fullPath;
     }

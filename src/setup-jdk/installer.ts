@@ -2,10 +2,10 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import fs from 'fs';
 import path from 'path';
-import {extractJdkFile, getDownloadArchiveExtension} from './util';
-import {JavaBase} from './base-installer';
-import {JavaDownloadRelease, JavaInstallerOptions, JavaInstallerResults} from './base-models';
-import {ICorrettoAllAvailableVersions, ICorrettoAvailableVersions} from './models';
+import { extractJdkFile, getDownloadArchiveExtension } from './util';
+import { JavaBase } from './base-installer';
+import { JavaDownloadRelease, JavaInstallerOptions, JavaInstallerResults } from './base-models';
+import { ICorrettoAllAvailableVersions, ICorrettoAvailableVersions } from './models';
 
 export class CorrettoDistribution extends JavaBase {
     constructor() {
@@ -13,9 +13,7 @@ export class CorrettoDistribution extends JavaBase {
     }
 
     protected async downloadTool(javaRelease: JavaDownloadRelease): Promise<JavaInstallerResults> {
-        core.info(
-            `Downloading Java ${javaRelease.version} (${this.distribution}) from ${javaRelease.url} ...`
-        );
+        core.info(`Downloading Java ${javaRelease.version} (${this.distribution}) from ${javaRelease.url} ...`);
         const javaArchivePath = await tc.downloadTool(javaRelease.url);
 
         core.info(`Extracting Java archive...`);
@@ -26,14 +24,9 @@ export class CorrettoDistribution extends JavaBase {
         const archivePath = path.join(extractedJavaPath, archiveName);
         const version = this.getToolcacheVersionName(javaRelease.version);
 
-        const javaPath = await tc.cacheDir(
-            archivePath,
-            this.toolcacheFolderName,
-            version,
-            this.architecture
-        );
+        const javaPath = await tc.cacheDir(archivePath, this.toolCacheFolderName, version, this.architecture);
 
-        return {version: javaRelease.version, path: javaPath};
+        return { version: javaRelease.version, path: javaPath };
     }
 
     protected async findPackageForDownload(version: string): Promise<JavaDownloadRelease> {
@@ -56,12 +49,8 @@ export class CorrettoDistribution extends JavaBase {
         const resolvedVersion = matchingVersions.length > 0 ? matchingVersions[0] : null;
         if (!resolvedVersion) {
             const availableOptions = availableVersions.map(item => item.version).join(', ');
-            const availableOptionsMessage = availableOptions
-                ? `\nAvailable versions: ${availableOptions}`
-                : '';
-            throw new Error(
-                `Could not find satisfied version for SemVer '${version}'. ${availableOptionsMessage}`
-            );
+            const availableOptionsMessage = availableOptions ? `\nAvailable versions: ${availableOptions}` : '';
+            throw new Error(`Could not find satisfied version for SemVer '${version}'. ${availableOptionsMessage}`);
         }
         return resolvedVersion;
     }
@@ -77,9 +66,7 @@ export class CorrettoDistribution extends JavaBase {
 
         const availableVersionsUrl =
             'https://corretto.github.io/corretto-downloads/latest_links/indexmap_with_checksum.json';
-        const fetchCurrentVersions = await this.http.getJson<ICorrettoAllAvailableVersions>(
-            availableVersionsUrl
-        );
+        const fetchCurrentVersions = await this.http.getJson<ICorrettoAllAvailableVersions>(availableVersionsUrl);
         const fetchedCurrentVersions = fetchCurrentVersions.result;
         if (!fetchedCurrentVersions) {
             throw Error(`Could not fetch latest corretto versions from ${availableVersionsUrl}`);
@@ -128,9 +115,7 @@ export class CorrettoDistribution extends JavaBase {
         core.startGroup('Print information about available versions');
         console.timeEnd('corretto-retrieve-available-versions');
         console.log(`Available versions: [${availableVersions.length}]`);
-        console.log(
-            availableVersions.map(item => `${item.version}: ${item.correttoVersion}`).join(', ')
-        );
+        console.log(availableVersions.map(item => `${item.version}: ${item.correttoVersion}`).join(', '));
         core.endGroup();
     }
 
