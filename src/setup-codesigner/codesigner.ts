@@ -5,9 +5,9 @@ import fs, { copyFileSync, mkdirSync } from 'fs';
 import os from 'os';
 import path from 'path';
 import {
-    CODESIGNTOOL_UNIX_EXEC,
+    CODESIGNTOOL_UNIX_CMD,
     CODESIGNTOOL_UNIX_SETUP,
-    CODESIGNTOOL_WINDOWS_EXEC,
+    CODESIGNTOOL_WINDOWS_CMD,
     CODESIGNTOOL_WINDOWS_SETUP,
     PRODUCTION_ENVIRONMENT_NAME,
     INPUT_ENVIRONMENT_NAME,
@@ -21,7 +21,7 @@ export class CodeSigner {
 
     public async setup(): Promise<string> {
         let link = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_SETUP : CODESIGNTOOL_UNIX_SETUP;
-        let command = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_EXEC : CODESIGNTOOL_UNIX_EXEC;
+        let cmd = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_CMD : CODESIGNTOOL_UNIX_CMD;
         core.info(`Downloading CodeSignTool from ${link}`);
 
         const codesigner = path.join(os.homedir(), 'codesign');
@@ -50,10 +50,11 @@ export class CodeSigner {
         core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
         process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
 
-        let execCommand = path.join(archivePath, command);
-        fs.chmodSync(execCommand, '0755');
+        let execCmd = path.join(archivePath, cmd);
+        fs.chmodSync(execCmd, '0755');
 
-        execCommand = `${shell()} ${execCommand}`;
-        return execCommand;
+        const shellCmd = shell();
+        execCmd = `${shellCmd}` + `${execCmd}`;
+        return execCmd;
     }
 }

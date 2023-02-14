@@ -7,15 +7,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PRODUCTION_ENVIRONMENT_NAME = exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_EXEC = exports.CODESIGNTOOL_WINDOWS_EXEC = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
+exports.PRODUCTION_ENVIRONMENT_NAME = exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_CMD = exports.CODESIGNTOOL_WINDOWS_CMD = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
 exports.MACOS_JAVA_CONTENT_POSTFIX = 'Contents/Home';
 exports.UNIX = 'UNIX';
 exports.MACOS = 'MACOS';
 exports.WINDOWS = 'WINDOWS';
 exports.CODESIGNTOOL_WINDOWS_SETUP = 'https://www.ssl.com/download/codesigntool-for-windows/';
 exports.CODESIGNTOOL_UNIX_SETUP = 'https://www.ssl.com/download/codesigntool-for-linux-and-macos/';
-exports.CODESIGNTOOL_WINDOWS_EXEC = 'CodeSignTool.bat';
-exports.CODESIGNTOOL_UNIX_EXEC = 'CodeSignTool.sh';
+exports.CODESIGNTOOL_WINDOWS_CMD = 'CodeSignTool.bat';
+exports.CODESIGNTOOL_UNIX_CMD = 'CodeSignTool.sh';
 exports.INPUT_COMMAND = 'command';
 exports.INPUT_USERNAME = 'username';
 exports.INPUT_PASSWORD = 'password';
@@ -152,12 +152,13 @@ const path_1 = __importDefault(__nccwpck_require__(5622));
 const constants_1 = __nccwpck_require__(5105);
 const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
-    constructor() { }
+    constructor() {
+    }
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
-            let command = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_EXEC : constants_1.CODESIGNTOOL_UNIX_EXEC;
+            let cmd = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_CMD : constants_1.CODESIGNTOOL_UNIX_CMD;
             core.info(`Downloading CodeSignTool from ${link}`);
             const codesigner = path_1.default.join(os_1.default.homedir(), 'codesign');
             core.info(`Creating CodeSignTool extract path ${codesigner}`);
@@ -178,10 +179,11 @@ class CodeSigner {
             (0, fs_1.copyFileSync)(sourceConfig, destConfig);
             core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
             process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
-            let execCommand = path_1.default.join(archivePath, command);
-            fs_1.default.chmodSync(execCommand, '0755');
-            execCommand = `${(0, util_1.shell)()} ${execCommand}`;
-            return execCommand;
+            let execCmd = path_1.default.join(archivePath, cmd);
+            fs_1.default.chmodSync(execCmd, '0755');
+            const shellCmd = (0, util_1.shell)();
+            execCmd = `${shellCmd}` + `${execCmd}`;
+            return execCmd;
         });
     }
 }
