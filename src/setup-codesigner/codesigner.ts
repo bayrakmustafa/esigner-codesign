@@ -28,9 +28,11 @@ export class CodeSigner {
 
         const downloadedPath = await tc.downloadTool(link);
         await extractZip(downloadedPath, codesigner);
+        core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
 
         const execCommand = path.join(codesigner, command);
         const contents = readFileSync('conf/code_sign_tool.properties');
+        core.info(contents.toString());
 
         return codesigner;
     }
