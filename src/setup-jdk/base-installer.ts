@@ -4,9 +4,9 @@ import * as fs from 'fs';
 import semver from 'semver';
 import path from 'path';
 import * as httpm from '@actions/http-client';
-import { getToolcachePath, isVersionSatisfies } from './util';
+import { getToolCachePath, isVersionSatisfies } from '../util';
 import { JavaDownloadRelease, JavaInstallerResults } from './base-models';
-import { MACOS_JAVA_CONTENT_POSTFIX } from './constants';
+import { MACOS_JAVA_CONTENT_POSTFIX } from '../constants';
 import os from 'os';
 
 export abstract class JavaBase {
@@ -34,7 +34,7 @@ export abstract class JavaBase {
     protected abstract findPackageForDownload(range: string): Promise<JavaDownloadRelease>;
 
     public async setupJava(): Promise<JavaInstallerResults> {
-        let foundJava = this.findInToolcache();
+        let foundJava = this.findInToolCache();
         if (foundJava && !this.checkLatest) {
             core.info(`Resolved Java ${foundJava.version} from tool-cache`);
         } else {
@@ -66,7 +66,7 @@ export abstract class JavaBase {
         return `Java_${this.distribution}_${this.packageType}`;
     }
 
-    protected getToolcacheVersionName(version: string): string {
+    protected getToolCacheVersionName(version: string): string {
         if (!this.stable) {
             if (version.includes('+')) {
                 return version.replace('+', '-ea.');
@@ -74,28 +74,16 @@ export abstract class JavaBase {
                 return `${version}-ea`;
             }
         }
-
-        // Kotlin and some Java dependencies don't work properly when Java path contains "+" sign
-        // so replace "/hostedtoolCache/Java/11.0.3+4/x64" to "/hostedtoolCache/Java/11.0.3-4/x64" when saves to cache
-        // related issue: https://github.com/actions/virtual-environments/issues/3014
         return version.replace('+', '-');
     }
 
-    protected findInToolcache(): JavaInstallerResults | null {
-        // we can't use tc.find directly because firstly, we need to filter versions by stability flag
-        // if *-ea is provided, take only ea versions from toolCache, otherwise - only stable versions
+    protected findInToolCache(): JavaInstallerResults | null {
         const availableVersions = tc
             .findAllVersions(this.toolCacheFolderName, this.architecture)
             .map(item => {
                 return {
-                    version: item
-                        .replace('-ea.', '+')
-                        .replace(/-ea$/, '')
-                        // Kotlin and some Java dependencies don't work properly when Java path contains "+" sign
-                        // so replace "/hostedtoolCache/Java/11.0.3-4/x64" to "/hostedtoolCache/Java/11.0.3+4/x64" when retrieves  to cache
-                        // related issue: https://github.com/actions/virtual-environments/issues/3014
-                        .replace('-', '+'),
-                    path: getToolcachePath(this.toolCacheFolderName, item, this.architecture) || '',
+                    version: item.replace('-ea.', '+').replace(/-ea$/, '').replace('-', '+'),
+                    path: getToolCachePath(this.toolCacheFolderName, item, this.architecture) || '',
                     stable: !item.includes('-ea')
                 };
             })
@@ -124,7 +112,6 @@ export abstract class JavaBase {
             version = version.replace(/-ea$/, '');
             stable = false;
         } else if (version.includes('-ea.')) {
-            // transform '11.0.3-ea.2' -> '11.0.3+2'
             version = version.replace('-ea.', '+');
             stable = false;
         }
@@ -152,13 +139,6 @@ export abstract class JavaBase {
     }
 
     protected distributionArchitecture(): string {
-        // default mappings of config architectures to distribution architectures
-        // override if a distribution uses any different names; see liberica for an example
-
-        // node's os.arch() - which this defaults to - can return any of:
-        // 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', and 'x64'
-        // so we need to map these to java distribution architectures
-        // 'amd64' is included here too b/c it's a common alias for 'x64' people might use explicitly
         switch (this.architecture) {
             case 'amd64':
                 return 'x64';

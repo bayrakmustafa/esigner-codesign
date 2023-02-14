@@ -2,9 +2,9 @@ import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import fs from 'fs';
 import path from 'path';
-import { extractJdkFile, getDownloadArchiveExtension } from './util';
+import { extractJdkFile, getDownloadArchiveExtension } from '../util';
 import { JavaBase } from './base-installer';
-import { JavaDownloadRelease, JavaInstallerOptions, JavaInstallerResults } from './base-models';
+import { JavaDownloadRelease, JavaInstallerResults } from './base-models';
 import { ICorrettoAllAvailableVersions, ICorrettoAvailableVersions } from './models';
 
 export class CorrettoDistribution extends JavaBase {
@@ -22,7 +22,7 @@ export class CorrettoDistribution extends JavaBase {
 
         const archiveName = fs.readdirSync(extractedJavaPath)[0];
         const archivePath = path.join(extractedJavaPath, archiveName);
-        const version = this.getToolcacheVersionName(javaRelease.version);
+        const version = this.getToolCacheVersionName(javaRelease.version);
 
         const javaPath = await tc.cacheDir(archivePath, this.toolCacheFolderName, version, this.architecture);
 
