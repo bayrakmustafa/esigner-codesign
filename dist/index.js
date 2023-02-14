@@ -7,10 +7,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
+exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_EXEC = exports.CODESIGNTOOL_WINDOWS_EXEC = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
 exports.MACOS_JAVA_CONTENT_POSTFIX = 'Contents/Home';
+exports.UNIX = 'UNIX';
+exports.MACOS = 'MACOS';
+exports.WINDOWS = 'WINDOWS';
 exports.CODESIGNTOOL_WINDOWS_SETUP = 'https://www.ssl.com/download/codesigntool-for-windows/';
 exports.CODESIGNTOOL_UNIX_SETUP = 'https://www.ssl.com/download/codesigntool-for-linux-and-macos/';
+exports.CODESIGNTOOL_WINDOWS_EXEC = 'CodeSignTool.bat';
+exports.CODESIGNTOOL_UNIX_EXEC = 'CodeSignTool.sh';
 exports.INPUT_COMMAND = 'command';
 exports.INPUT_USERNAME = 'username';
 exports.INPUT_PASSWORD = 'password';
@@ -61,6 +66,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const constants_1 = __nccwpck_require__(5105);
+const codesigner_1 = __nccwpck_require__(6598);
 const installer_1 = __nccwpck_require__(2507);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -68,6 +74,8 @@ function run() {
             const command = core.getInput(constants_1.INPUT_COMMAND);
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
+            const codesigner = new codesigner_1.CodeSigner();
+            yield codesigner.install();
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setupJava();
             core.setOutput('time', new Date().toTimeString());
@@ -79,6 +87,74 @@ function run() {
     });
 }
 run().then();
+
+
+/***/ }),
+
+/***/ 6598:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CodeSigner = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const tc = __importStar(__nccwpck_require__(7784));
+const fs_1 = __nccwpck_require__(5747);
+const os_1 = __importDefault(__nccwpck_require__(2087));
+const path_1 = __importDefault(__nccwpck_require__(5622));
+const constants_1 = __nccwpck_require__(5105);
+const util_1 = __nccwpck_require__(4024);
+class CodeSigner {
+    constructor() { }
+    install() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
+            let command = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_EXEC : constants_1.CODESIGNTOOL_UNIX_EXEC;
+            core.info(`Downloading CodeSignTool from ${link}`);
+            const codesigner = path_1.default.join(os_1.default.homedir(), 'codesign');
+            core.info(`Creating CodeSignTool extract path ${codesigner}`);
+            (0, fs_1.mkdirSync)(codesigner);
+            const downloadedPath = yield tc.downloadTool(link);
+            yield (0, util_1.extractZip)(downloadedPath, codesigner);
+            const execCommand = path_1.default.join(codesigner, command);
+            const contents = (0, fs_1.readFileSync)('conf/code_sign_tool.properties');
+            return codesigner;
+        });
+    }
+}
+exports.CodeSigner = CodeSigner;
 
 
 /***/ }),
@@ -457,13 +533,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractCodeSignTool = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
+exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
 const os_1 = __importDefault(__nccwpck_require__(2087));
 const path_1 = __importDefault(__nccwpck_require__(5622));
 const fs = __importStar(__nccwpck_require__(5747));
 const semver = __importStar(__nccwpck_require__(1383));
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
+const constants_1 = __nccwpck_require__(5105);
 function getTempDir() {
     return process.env['RUNNER_TEMP'] || os_1.default.tmpdir();
 }
@@ -492,12 +569,12 @@ function extractJdkFile(toolPath, extension) {
     });
 }
 exports.extractJdkFile = extractJdkFile;
-function extractCodeSignTool(toolPath, destPath) {
+function extractZip(toolPath, destPath) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield tc.extractZip(toolPath, destPath);
     });
 }
-exports.extractCodeSignTool = extractCodeSignTool;
+exports.extractZip = extractZip;
 function getDownloadArchiveExtension() {
     return process.platform === 'win32' ? 'zip' : 'tar.gz';
 }
@@ -523,6 +600,17 @@ function getToolCachePath(toolName, version, architecture) {
     return null;
 }
 exports.getToolCachePath = getToolCachePath;
+function getPlatform() {
+    switch (process.platform) {
+        case 'darwin':
+            return constants_1.MACOS;
+        case 'win32':
+            return constants_1.WINDOWS;
+        default:
+            return constants_1.UNIX;
+    }
+}
+exports.getPlatform = getPlatform;
 
 
 /***/ }),

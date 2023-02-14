@@ -7,6 +7,9 @@ export const WINDOWS = 'WINDOWS';
 export const CODESIGNTOOL_WINDOWS_SETUP = 'https://www.ssl.com/download/codesigntool-for-windows/';
 export const CODESIGNTOOL_UNIX_SETUP = 'https://www.ssl.com/download/codesigntool-for-linux-and-macos/';
 
+export const CODESIGNTOOL_WINDOWS_EXEC = 'CodeSignTool.bat';
+export const CODESIGNTOOL_UNIX_EXEC = 'CodeSignTool.sh';
+
 export const INPUT_COMMAND = 'command';
 export const INPUT_USERNAME = 'username';
 export const INPUT_PASSWORD = 'password';
