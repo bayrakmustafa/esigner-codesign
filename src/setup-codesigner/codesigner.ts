@@ -28,7 +28,7 @@ export class CodeSigner {
         core.info(`Creating CodeSignTool extract path ${codesigner}`);
         mkdirSync(codesigner);
 
-        const downloadedPath = await tc.downloadTool(link, getTempDir());
+        const downloadedPath = await tc.downloadTool(link);
 
         const extractedCodeSignPath = await extractZip(downloadedPath, codesigner);
         core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);

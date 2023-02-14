@@ -149,7 +149,7 @@ class CodeSigner {
             const codesigner = path_1.default.join(os_1.default.homedir(), 'codesign');
             core.info(`Creating CodeSignTool extract path ${codesigner}`);
             (0, fs_1.mkdirSync)(codesigner);
-            const downloadedPath = yield tc.downloadTool(link, (0, util_1.getTempDir)());
+            const downloadedPath = yield tc.downloadTool(link);
             const extractedCodeSignPath = yield (0, util_1.extractZip)(downloadedPath, codesigner);
             core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
             const archiveName = fs_1.default.readdirSync(extractedCodeSignPath)[0];
