@@ -162,10 +162,10 @@ class CodeSigner {
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
                 ? 'conf/code_sign_tool.properties'
                 : 'conf/code_sign_tool_demo.properties';
-            const destConfig = path_1.default.join(codesigner, 'conf/code_sign_tool.properties');
+            const destConfig = path_1.default.join(archivePath, 'conf/code_sign_tool.properties');
             core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
             (0, fs_1.copyFileSync)(sourceConfig, destConfig);
-            return path_1.default.join(codesigner, command);
+            return path_1.default.join(archivePath, command);
         });
     }
 }

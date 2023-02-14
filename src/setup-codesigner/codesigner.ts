@@ -14,7 +14,7 @@ import {
     WINDOWS
 } from '../constants';
 
-import {extractZip, getPlatform, getTempDir} from '../util';
+import { extractZip, getPlatform, getTempDir } from '../util';
 
 export class CodeSigner {
     constructor() {}
@@ -46,11 +46,11 @@ export class CodeSigner {
             environment == PRODUCTION_ENVIRONMENT_NAME
                 ? 'conf/code_sign_tool.properties'
                 : 'conf/code_sign_tool_demo.properties';
-        const destConfig = path.join(codesigner, 'conf/code_sign_tool.properties');
+        const destConfig = path.join(archivePath, 'conf/code_sign_tool.properties');
 
         core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
         copyFileSync(sourceConfig, destConfig);
 
-        return path.join(codesigner, command);
+        return path.join(archivePath, command);
     }
 }
