@@ -39,8 +39,8 @@ async function run(): Promise<void> {
         const distribution = new JavaDistribution();
         await distribution.setup();
 
-        const result = await exec.exec(command);
-        core.info(result.toString());
+        const result = await exec.getExecOutput(command);
+        core.info(result.stdout);
 
         core.setOutput('time', new Date().toTimeString());
     } catch (error) {
