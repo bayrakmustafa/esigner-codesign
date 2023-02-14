@@ -14,7 +14,7 @@ import {
     WINDOWS
 } from '../constants';
 
-import { extractZip, getPlatform, getTempDir, listFiles } from '../util';
+import { extractZip, getPlatform, getTempDir, listFiles, shell } from '../util';
 
 export class CodeSigner {
     constructor() {}
@@ -50,13 +50,10 @@ export class CodeSigner {
         core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
         process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
 
-        const execCommand = path.join(archivePath, command);
-        fs.chmod(execCommand, '0755', error => {
-            if (error) {
-                core.error(error);
-            }
-        });
+        let execCommand = path.join(archivePath, command);
+        fs.chmodSync(execCommand, '0755');
 
+        execCommand = `${shell()} ${execCommand}`;
         return execCommand;
     }
 }

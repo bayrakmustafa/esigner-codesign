@@ -1,4 +1,4 @@
-import os from 'os';
+import os, { userInfo } from 'os';
 import path from 'path';
 import * as fs from 'fs';
 import * as semver from 'semver';
@@ -81,3 +81,25 @@ export function listFiles(path: string, debug: boolean = false): void {
         });
     }
 }
+
+export const shell = () => {
+    const { env } = process;
+
+    const platform = getPlatform();
+    if (platform == WINDOWS) {
+        return env.COMSPEC || 'cmd.exe';
+    }
+
+    try {
+        const shell = userInfo();
+        if (shell) return shell;
+    } catch {
+        //Ignored
+    }
+
+    if (platform === MACOS) {
+        return env.SHELL || '/bin/zsh';
+    }
+
+    return env.SHELL || '/bin/sh';
+};

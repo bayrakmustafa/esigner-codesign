@@ -178,12 +178,9 @@ class CodeSigner {
             (0, fs_1.copyFileSync)(sourceConfig, destConfig);
             core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
             process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
-            const execCommand = path_1.default.join(archivePath, command);
-            fs_1.default.chmod(execCommand, '0755', (error) => {
-                if (error) {
-                    core.error(error);
-                }
-            });
+            let execCommand = path_1.default.join(archivePath, command);
+            fs_1.default.chmodSync(execCommand, '0755');
+            execCommand = `${(0, util_1.shell)()} ${execCommand}`;
             return execCommand;
         });
     }
@@ -567,8 +564,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
-const os_1 = __importDefault(__nccwpck_require__(2087));
+exports.shell = exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
+const os_1 = __importStar(__nccwpck_require__(2087));
 const path_1 = __importDefault(__nccwpck_require__(5622));
 const fs = __importStar(__nccwpck_require__(5747));
 const semver = __importStar(__nccwpck_require__(1383));
@@ -654,6 +651,26 @@ function listFiles(path, debug = false) {
     }
 }
 exports.listFiles = listFiles;
+const shell = () => {
+    const { env } = process;
+    const platform = getPlatform();
+    if (platform == constants_1.WINDOWS) {
+        return env.COMSPEC || 'cmd.exe';
+    }
+    try {
+        const shell = (0, os_1.userInfo)();
+        if (shell)
+            return shell;
+    }
+    catch (_a) {
+        //Ignored
+    }
+    if (platform === constants_1.MACOS) {
+        return env.SHELL || '/bin/zsh';
+    }
+    return env.SHELL || '/bin/sh';
+};
+exports.shell = shell;
 
 
 /***/ }),
