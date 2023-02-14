@@ -1,3 +1,5 @@
+import exp from 'constants';
+
 export const MACOS_JAVA_CONTENT_POSTFIX = 'Contents/Home';
 
 export const UNIX = 'UNIX';
@@ -20,3 +22,5 @@ export const INPUT_FILE_PATH = 'file_path';
 export const INPUT_OUTPUT_PATH = 'output_path';
 export const INPUT_MALWARE_BLOCK = 'malware_block';
 export const INPUT_ENVIRONMENT_NAME = 'environment_name';
+
+export const PRODUCTION_ENVIRONMENT_NAME = 'PROD';

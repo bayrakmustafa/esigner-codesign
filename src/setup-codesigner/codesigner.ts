@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
-import { mkdirSync, readFileSync } from 'fs';
+import { copyFileSync, mkdirSync, readFileSync } from 'fs';
 import os from 'os';
 import path from 'path';
 import {
@@ -9,6 +9,8 @@ import {
     CODESIGNTOOL_UNIX_SETUP,
     CODESIGNTOOL_WINDOWS_EXEC,
     CODESIGNTOOL_WINDOWS_SETUP,
+    PRODUCTION_ENVIRONMENT_NAME,
+    INPUT_ENVIRONMENT_NAME,
     WINDOWS
 } from '../constants';
 
@@ -30,10 +32,16 @@ export class CodeSigner {
         await extractZip(downloadedPath, codesigner);
         core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
 
-        const execCommand = path.join(codesigner, command);
-        const contents = readFileSync('conf/code_sign_tool.properties');
-        core.info(contents.toString());
+        const environment = core.getInput(INPUT_ENVIRONMENT_NAME) ?? PRODUCTION_ENVIRONMENT_NAME;
+        const sourceConfig =
+            environment == PRODUCTION_ENVIRONMENT_NAME
+                ? 'conf/code_sign_tool.properties'
+                : 'conf/code_sign_tool_demo.properties';
+        const destConfig = path.join(codesigner, 'conf/code_sign_tool.properties');
 
-        return codesigner;
+        core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
+        copyFileSync(sourceConfig, destConfig);
+
+        return path.join(codesigner, command);
     }
 }

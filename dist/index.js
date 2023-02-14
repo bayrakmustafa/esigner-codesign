@@ -7,7 +7,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_EXEC = exports.CODESIGNTOOL_WINDOWS_EXEC = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
+exports.PRODUCTION_ENVIRONMENT_NAME = exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_EXEC = exports.CODESIGNTOOL_WINDOWS_EXEC = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
 exports.MACOS_JAVA_CONTENT_POSTFIX = 'Contents/Home';
 exports.UNIX = 'UNIX';
 exports.MACOS = 'MACOS';
@@ -26,6 +26,7 @@ exports.INPUT_FILE_PATH = 'file_path';
 exports.INPUT_OUTPUT_PATH = 'output_path';
 exports.INPUT_MALWARE_BLOCK = 'malware_block';
 exports.INPUT_ENVIRONMENT_NAME = 'environment_name';
+exports.PRODUCTION_ENVIRONMENT_NAME = 'PROD';
 
 
 /***/ }),
@@ -71,11 +72,12 @@ const installer_1 = __nccwpck_require__(2507);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const command = core.getInput(constants_1.INPUT_COMMAND);
+            const inputCommand = core.getInput(constants_1.INPUT_COMMAND);
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
             const codesigner = new codesigner_1.CodeSigner();
-            yield codesigner.install();
+            const command = yield codesigner.install();
+            core.info(`Command: {command}`);
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setupJava();
             core.setOutput('time', new Date().toTimeString());
@@ -139,6 +141,7 @@ const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
     constructor() { }
     install() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
             let command = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_EXEC : constants_1.CODESIGNTOOL_UNIX_EXEC;
@@ -149,10 +152,14 @@ class CodeSigner {
             const downloadedPath = yield tc.downloadTool(link);
             yield (0, util_1.extractZip)(downloadedPath, codesigner);
             core.info(`Extract CodeSignTool from download path ${downloadedPath} to ${codesigner}`);
-            const execCommand = path_1.default.join(codesigner, command);
-            const contents = (0, fs_1.readFileSync)('conf/code_sign_tool.properties');
-            core.info(contents.toString());
-            return codesigner;
+            const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
+            const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
+                ? 'conf/code_sign_tool.properties'
+                : 'conf/code_sign_tool_demo.properties';
+            const destConfig = path_1.default.join(codesigner, 'conf/code_sign_tool.properties');
+            core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
+            (0, fs_1.copyFileSync)(sourceConfig, destConfig);
+            return path_1.default.join(codesigner, command);
         });
     }
 }

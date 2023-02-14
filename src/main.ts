@@ -5,12 +5,13 @@ import { JavaDistribution } from './setup-jdk/installer';
 
 async function run(): Promise<void> {
     try {
-        const command: string = core.getInput(INPUT_COMMAND);
+        const inputCommand: string = core.getInput(INPUT_COMMAND);
         core.debug('Run CodeSigner');
         core.debug('Running ESigner.com CodeSign Action ====>');
 
         const codesigner = new CodeSigner();
-        await codesigner.install();
+        const command = await codesigner.install();
+        core.info(`Command: {command}`);
 
         const distribution = new JavaDistribution();
         await distribution.setupJava();
