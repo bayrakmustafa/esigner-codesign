@@ -656,31 +656,32 @@ function inputCommands() {
 exports.inputCommands = inputCommands;
 function setCommand(inputKey, command) {
     const input = core.getInput(inputKey);
-    if (input != null && input == '') {
-        if (inputKey == constants_1.INPUT_USERNAME) {
-            command = `${command} -username ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_PASSWORD) {
-            command = `${command} -password ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_CREDENTIAL_ID) {
-            command = `${command} -credential_id ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_TOTP_SECRET) {
-            command = `${command} -totp_secret ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_PROGRAM_NAME) {
-            command = `${command} -program_name ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_FILE_PATH) {
-            command = `${command} -input_file_path ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_OUTPUT_PATH) {
-            command = `${command} -output_dir_path ${input}`;
-        }
-        else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
-            command = `${command} -malware_block=${input}`;
-        }
+    if (input == '') {
+        return command;
+    }
+    if (inputKey == constants_1.INPUT_USERNAME) {
+        command = `${command} -username ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_PASSWORD) {
+        command = `${command} -password ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_CREDENTIAL_ID) {
+        command = `${command} -credential_id ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_TOTP_SECRET) {
+        command = `${command} -totp_secret ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_PROGRAM_NAME) {
+        command = `${command} -program_name ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_FILE_PATH) {
+        command = `${command} -input_file_path ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_OUTPUT_PATH) {
+        command = `${command} -output_dir_path ${input}`;
+    }
+    else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
+        command = `${command} -malware_block=${input}`;
     }
     return command;
 }
