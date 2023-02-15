@@ -67,22 +67,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
-const constants_1 = __nccwpck_require__(5105);
 const codesigner_1 = __nccwpck_require__(6598);
 const installer_1 = __nccwpck_require__(2507);
+const util_1 = __nccwpck_require__(4024);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let command = '';
-            command = `${command} ${core.getInput(constants_1.INPUT_COMMAND)}`;
-            //command = `${command} -username ${core.getInput(INPUT_USERNAME)}`;
-            //command = `${command} -password ${core.getInput(INPUT_PASSWORD)}`;
-            //command = `${command} -credential_id ${core.getInput(INPUT_CREDENTIAL_ID)}`;
-            //command = `${command} -totp_secret ${core.getInput(INPUT_TOTP_SECRET)}`;
-            //command = `${command} -program_name ${core.getInput(INPUT_PROGRAM_NAME)}`;
-            //command = `${command} -input_file_path ${core.getInput(INPUT_FILE_PATH)}`;
-            //command = `${command} -output_dir_path ${core.getInput(INPUT_OUTPUT_PATH)}`;
-            //command = `${command} -malware_block=${core.getInput(INPUT_MALWARE_BLOCK)}`;
+            let command = (0, util_1.inputCommands)();
+            core.info(`Input Commands: ${command}`);
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
             const codesigner = new codesigner_1.CodeSigner();
@@ -180,7 +172,7 @@ class CodeSigner {
             process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
             let execCmd = path_1.default.join(archivePath, cmd);
             fs_1.default.chmodSync(execCmd, '0755');
-            const shellCmd = (0, util_1.shell)();
+            const shellCmd = (0, util_1.userShell)();
             core.info(`Shell Cmd: ${shellCmd}`);
             execCmd = shellCmd + ' ' + execCmd;
             return execCmd;
@@ -566,7 +558,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.shell = exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getBooleanInput = exports.getTempDir = void 0;
+exports.userShell = exports.setCommand = exports.inputCommands = exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getTempDir = void 0;
 const os_1 = __importStar(__nccwpck_require__(2087));
 const path_1 = __importDefault(__nccwpck_require__(5622));
 const fs = __importStar(__nccwpck_require__(5747));
@@ -578,10 +570,6 @@ function getTempDir() {
     return process.env['RUNNER_TEMP'] || os_1.default.tmpdir();
 }
 exports.getTempDir = getTempDir;
-function getBooleanInput(inputName, defaultValue = false) {
-    return (core.getInput(inputName) || String(defaultValue)).toUpperCase() === 'TRUE';
-}
-exports.getBooleanInput = getBooleanInput;
 function extractJdkFile(toolPath, extension) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!extension) {
@@ -653,7 +641,51 @@ function listFiles(path, debug = false) {
     }
 }
 exports.listFiles = listFiles;
-const shell = () => {
+function inputCommands() {
+    let command = `${core.getInput(constants_1.INPUT_COMMAND)}`;
+    command = setCommand(constants_1.INPUT_USERNAME, command);
+    command = setCommand(constants_1.INPUT_PASSWORD, command);
+    command = setCommand(constants_1.INPUT_CREDENTIAL_ID, command);
+    command = setCommand(constants_1.INPUT_TOTP_SECRET, command);
+    command = setCommand(constants_1.INPUT_PROGRAM_NAME, command);
+    command = setCommand(constants_1.INPUT_FILE_PATH, command);
+    command = setCommand(constants_1.INPUT_OUTPUT_PATH, command);
+    command = setCommand(constants_1.INPUT_MALWARE_BLOCK, command);
+    return command;
+}
+exports.inputCommands = inputCommands;
+function setCommand(inputKey, command) {
+    const input = core.getInput(inputKey);
+    if (input != null && input == '') {
+        if (inputKey == constants_1.INPUT_USERNAME) {
+            command = `${command} -username ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_PASSWORD) {
+            command = `${command} -password ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_CREDENTIAL_ID) {
+            command = `${command} -credential_id ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_TOTP_SECRET) {
+            command = `${command} -totp_secret ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_PROGRAM_NAME) {
+            command = `${command} -program_name ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_FILE_PATH) {
+            command = `${command} -input_file_path ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_OUTPUT_PATH) {
+            command = `${command} -output_dir_path ${input}`;
+        }
+        else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
+            command = `${command} -malware_block=${input}`;
+        }
+    }
+    return command;
+}
+exports.setCommand = setCommand;
+function userShell() {
     var _a, _b;
     const { env } = process;
     const platform = getPlatform();
@@ -672,8 +704,8 @@ const shell = () => {
         return (_a = env.SHELL) !== null && _a !== void 0 ? _a : '/bin/zsh';
     }
     return (_b = env.SHELL) !== null && _b !== void 0 ? _b : '/bin/sh';
-};
-exports.shell = shell;
+}
+exports.userShell = userShell;
 
 
 /***/ }),

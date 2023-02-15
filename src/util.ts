@@ -4,14 +4,23 @@ import * as fs from 'fs';
 import * as semver from 'semver';
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
-import { MACOS, UNIX, WINDOWS } from './constants';
+import {
+    INPUT_COMMAND,
+    INPUT_CREDENTIAL_ID,
+    INPUT_FILE_PATH,
+    INPUT_MALWARE_BLOCK,
+    INPUT_OUTPUT_PATH,
+    INPUT_PASSWORD,
+    INPUT_PROGRAM_NAME,
+    INPUT_TOTP_SECRET,
+    INPUT_USERNAME,
+    MACOS,
+    UNIX,
+    WINDOWS
+} from './constants';
 
 export function getTempDir() {
     return process.env['RUNNER_TEMP'] || os.tmpdir();
-}
-
-export function getBooleanInput(inputName: string, defaultValue: boolean = false) {
-    return (core.getInput(inputName) || String(defaultValue)).toUpperCase() === 'TRUE';
 }
 
 export async function extractJdkFile(toolPath: string, extension?: string) {
@@ -82,7 +91,44 @@ export function listFiles(path: string, debug: boolean = false): void {
     }
 }
 
-export const shell = () => {
+export function inputCommands(): string {
+    let command = `${core.getInput(INPUT_COMMAND)}`;
+    command = setCommand(INPUT_USERNAME, command);
+    command = setCommand(INPUT_PASSWORD, command);
+    command = setCommand(INPUT_CREDENTIAL_ID, command);
+    command = setCommand(INPUT_TOTP_SECRET, command);
+    command = setCommand(INPUT_PROGRAM_NAME, command);
+    command = setCommand(INPUT_FILE_PATH, command);
+    command = setCommand(INPUT_OUTPUT_PATH, command);
+    command = setCommand(INPUT_MALWARE_BLOCK, command);
+    return command;
+}
+
+export function setCommand(inputKey: string, command: string): string {
+    const input = core.getInput(inputKey);
+    if (input != null && input == '') {
+        if (inputKey == INPUT_USERNAME) {
+            command = `${command} -username ${input}`;
+        } else if (inputKey == INPUT_PASSWORD) {
+            command = `${command} -password ${input}`;
+        } else if (inputKey == INPUT_CREDENTIAL_ID) {
+            command = `${command} -credential_id ${input}`;
+        } else if (inputKey == INPUT_TOTP_SECRET) {
+            command = `${command} -totp_secret ${input}`;
+        } else if (inputKey == INPUT_PROGRAM_NAME) {
+            command = `${command} -program_name ${input}`;
+        } else if (inputKey == INPUT_FILE_PATH) {
+            command = `${command} -input_file_path ${input}`;
+        } else if (inputKey == INPUT_OUTPUT_PATH) {
+            command = `${command} -output_dir_path ${input}`;
+        } else if (inputKey == INPUT_MALWARE_BLOCK) {
+            command = `${command} -malware_block=${input}`;
+        }
+    }
+    return command;
+}
+
+export function userShell(): string {
     const { env } = process;
 
     const platform = getPlatform();
@@ -102,4 +148,4 @@ export const shell = () => {
     }
 
     return env.SHELL ?? '/bin/sh';
-};
+}

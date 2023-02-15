@@ -14,7 +14,7 @@ import {
     WINDOWS
 } from '../constants';
 
-import { extractZip, getPlatform, getTempDir, listFiles, shell } from '../util';
+import { extractZip, getPlatform, listFiles, userShell } from '../util';
 
 export class CodeSigner {
     constructor() {}
@@ -53,7 +53,7 @@ export class CodeSigner {
         let execCmd = path.join(archivePath, cmd);
         fs.chmodSync(execCmd, '0755');
 
-        const shellCmd = shell();
+        const shellCmd = userShell();
         core.info(`Shell Cmd: ${shellCmd}`);
         execCmd = shellCmd + ' ' + execCmd;
         return execCmd;
