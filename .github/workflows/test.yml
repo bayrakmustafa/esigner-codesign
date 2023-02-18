@@ -1,23 +1,17 @@
-name: 'build-test'
-on: # rebuild any PRs and main branch changes
-  pull_request:
-  push:
-    branches:
-      - main
-      - 'releases/*'
+name: 'action-codesigner'
+
+on: [push]
 
 jobs:
-  build: # make sure build/ci work properly
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: |
           npm --version && node --version
-      - run: |
           npm install
-      - run: |
           npm run all
-  test: # make sure the action works on a clean machine without building
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,5 +26,3 @@ jobs:
           output_path: ${GITHUB_WORKSPACE}/artifacts
           malware_block: false
           environment_name: TEST
-      - run: | 
-          java --version
