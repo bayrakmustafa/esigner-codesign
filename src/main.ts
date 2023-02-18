@@ -28,9 +28,17 @@ async function run(): Promise<void> {
         const distribution = new JavaDistribution();
         await distribution.setup();
 
-        await exec.getExecOutput(command);
+        const result = await exec.getExecOutput(command);
+        if (
+            result.stdout.includes('Error') ||
+            result.stdout.includes('Exception') ||
+            result.stdout.includes('Missing required option')
+        ) {
+            core.setFailed('Something Went Wrong. Please try again.');
+            return;
+        }
 
-        core.setOutput('time', new Date().toTimeString());
+        core.setOutput('result', result);
     } catch (error) {
         if (error instanceof Error) core.setFailed(error.message);
     }
