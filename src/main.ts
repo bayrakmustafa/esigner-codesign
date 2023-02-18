@@ -1,5 +1,9 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
+import {mkdirSync} from "fs";
+import os from "os";
+import path from "path";
+import {INPUT_OUTPUT_PATH} from "./constants";
 
 import { CodeSigner } from './setup-codesigner/codesigner';
 import { JavaDistribution } from './setup-jdk/installer';
@@ -12,6 +16,10 @@ async function run(): Promise<void> {
 
         core.debug('Run CodeSigner');
         core.debug('Running ESigner.com CodeSign Action ====>');
+
+        const outputPath = core.getInput(INPUT_OUTPUT_PATH);
+        core.info(`Creating CodeSignTool output path ${outputPath}`);
+        mkdirSync(outputPath);
 
         const codesigner = new CodeSigner();
         const execCommand = await codesigner.setup();
