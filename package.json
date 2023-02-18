@@ -18,7 +18,9 @@
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "setup",
+    "SSLcom",
+    "CodeSigner"
   ],
   "author": "",
   "license": "MIT",
