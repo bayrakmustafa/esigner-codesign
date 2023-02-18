@@ -81,6 +81,7 @@ function run() {
         try {
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
+            const inputFilePath = core.getInput(constants_1.INPUT_FILE_PATH);
             const outputPath = core.getInput(constants_1.INPUT_OUTPUT_PATH);
             core.info(`Creating CodeSignTool output path ${outputPath}`);
             (0, fs_1.mkdirSync)(outputPath);
@@ -93,9 +94,10 @@ function run() {
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setup();
             const result = yield exec.getExecOutput(command);
-            if (result.stdout.includes("Error") || result.stdout.includes("Exception") ||
-                result.stdout.includes("Missing required option")) {
-                core.setFailed("Something Went Wrong. Please try again.");
+            if (result.stdout.includes('Error') ||
+                result.stdout.includes('Exception') ||
+                result.stdout.includes('Missing required option')) {
+                core.setFailed('Something Went Wrong. Please try again.');
                 return;
             }
             core.setOutput('result', result);
