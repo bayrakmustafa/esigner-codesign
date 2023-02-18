@@ -152,7 +152,7 @@ export function userShell(): string {
 
     const platform = getPlatform();
     if (platform == WINDOWS) {
-        return env.COMSPEC || '';
+        return 'cmd.exe -/c';
     }
 
     try {
