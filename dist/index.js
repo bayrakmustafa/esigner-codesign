@@ -67,16 +67,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
+const fs_1 = __nccwpck_require__(5747);
+const constants_1 = __nccwpck_require__(5105);
 const codesigner_1 = __nccwpck_require__(6598);
 const installer_1 = __nccwpck_require__(2507);
 const util_1 = __nccwpck_require__(4024);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let command = (0, util_1.inputCommands)();
-            core.info(`Input Commands: ${command}`);
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
+            const outputPath = core.getInput(constants_1.INPUT_OUTPUT_PATH);
+            core.info(`Creating CodeSignTool output path ${outputPath}`);
+            (0, fs_1.mkdirSync)(outputPath);
+            let command = (0, util_1.inputCommands)();
+            core.info(`Input Commands: ${command}`);
             const codesigner = new codesigner_1.CodeSigner();
             const execCommand = yield codesigner.setup();
             command = `${execCommand} ${command}`;

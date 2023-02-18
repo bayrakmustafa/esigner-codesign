@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
-import {mkdirSync} from "fs";
-import {INPUT_OUTPUT_PATH} from "./constants";
+import { mkdirSync } from 'fs';
+import { INPUT_OUTPUT_PATH } from './constants';
 
 import { CodeSigner } from './setup-codesigner/codesigner';
 import { JavaDistribution } from './setup-jdk/installer';
