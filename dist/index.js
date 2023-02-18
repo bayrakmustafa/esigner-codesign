@@ -88,8 +88,7 @@ function run() {
             core.info(`CodeSigner Command: ${command}`);
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setup();
-            const result = yield exec.getExecOutput(command);
-            core.info(result.stdout);
+            yield exec.getExecOutput(command);
             core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
