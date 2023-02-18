@@ -124,8 +124,12 @@ export function setCommand(inputKey: string, command: string): string {
     } else if (inputKey == INPUT_FILE_PATH) {
         command = `${command} -input_file_path ${input}`;
     } else if (inputKey == INPUT_OUTPUT_PATH) {
-        core.info(`Creating CodeSignTool output path ${input}`);
-        mkdirSync(input);
+        if (fs.existsSync(input)) {
+            core.info(`CodeSignTool output path ${input} already exist`);
+        } else {
+            core.info(`Creating CodeSignTool output path ${input}`);
+            mkdirSync(input);
+        }
         command = `${command} -output_dir_path ${input}`;
     } else if (inputKey == INPUT_MALWARE_BLOCK) {
         command = `${command} -malware_block=${input}`;

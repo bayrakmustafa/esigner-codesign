@@ -705,8 +705,13 @@ function setCommand(inputKey, command) {
         command = `${command} -input_file_path ${input}`;
     }
     else if (inputKey == constants_1.INPUT_OUTPUT_PATH) {
-        core.info(`Creating CodeSignTool output path ${input}`);
-        (0, fs_1.mkdirSync)(input);
+        if (fs.existsSync(input)) {
+            core.info(`CodeSignTool output path ${input} already exist`);
+        }
+        else {
+            core.info(`Creating CodeSignTool output path ${input}`);
+            (0, fs_1.mkdirSync)(input);
+        }
         command = `${command} -output_dir_path ${input}`;
     }
     else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
