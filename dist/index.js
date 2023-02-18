@@ -71,8 +71,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
-const fs_1 = __nccwpck_require__(7147);
-const constants_1 = __nccwpck_require__(5105);
 const codesigner_1 = __nccwpck_require__(6598);
 const installer_1 = __nccwpck_require__(2507);
 const util_1 = __nccwpck_require__(4024);
@@ -81,10 +79,6 @@ function run() {
         try {
             core.debug('Run CodeSigner');
             core.debug('Running ESigner.com CodeSign Action ====>');
-            const inputFilePath = core.getInput(constants_1.INPUT_FILE_PATH);
-            const outputPath = core.getInput(constants_1.INPUT_OUTPUT_PATH);
-            core.info(`Creating CodeSignTool output path ${outputPath}`);
-            (0, fs_1.mkdirSync)(outputPath);
             let command = (0, util_1.inputCommands)();
             core.info(`Input Commands: ${command}`);
             const codesigner = new codesigner_1.CodeSigner();
@@ -97,10 +91,10 @@ function run() {
             if (result.stdout.includes('Error') ||
                 result.stdout.includes('Exception') ||
                 result.stdout.includes('Missing required option')) {
-                core.setFailed('Something Went Wrong. Please try again.');
+                core.setFailed('\nSomething Went Wrong. Please try again.');
                 return;
             }
-            core.setOutput('result', result);
+            core.setOutput('CodeSigner', result);
         }
         catch (error) {
             if (error instanceof Error)
@@ -589,7 +583,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.userShell = exports.setCommand = exports.inputCommands = exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getTempDir = void 0;
+exports.userShell = exports.replaceEnv = exports.setCommand = exports.inputCommands = exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getTempDir = void 0;
+const fs_1 = __nccwpck_require__(7147);
 const os_1 = __importStar(__nccwpck_require__(2037));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs = __importStar(__nccwpck_require__(7147));
@@ -686,7 +681,7 @@ function inputCommands() {
 }
 exports.inputCommands = inputCommands;
 function setCommand(inputKey, command) {
-    const input = core.getInput(inputKey);
+    const input = replaceEnv(core.getInput(inputKey));
     if (input == '') {
         return command;
     }
@@ -709,6 +704,8 @@ function setCommand(inputKey, command) {
         command = `${command} -input_file_path ${input}`;
     }
     else if (inputKey == constants_1.INPUT_OUTPUT_PATH) {
+        core.info(`Creating CodeSignTool output path ${input}`);
+        (0, fs_1.mkdirSync)(input);
         command = `${command} -output_dir_path ${input}`;
     }
     else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
@@ -717,6 +714,15 @@ function setCommand(inputKey, command) {
     return command;
 }
 exports.setCommand = setCommand;
+function replaceEnv(input) {
+    const variables = process.env;
+    for (const envKey in variables) {
+        // @ts-ignore
+        input = input.replace('${' + envKey + '}', variables[envKey]);
+    }
+    return input;
+}
+exports.replaceEnv = replaceEnv;
 function userShell() {
     var _a, _b;
     const { env } = process;

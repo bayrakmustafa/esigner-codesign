@@ -1,3 +1,4 @@
+import { mkdirSync } from 'fs';
 import os, { userInfo } from 'os';
 import path from 'path';
 import * as fs from 'fs';
@@ -105,7 +106,7 @@ export function inputCommands(): string {
 }
 
 export function setCommand(inputKey: string, command: string): string {
-    const input = core.getInput(inputKey);
+    const input = replaceEnv(core.getInput(inputKey));
     if (input == '') {
         return command;
     }
@@ -123,11 +124,22 @@ export function setCommand(inputKey: string, command: string): string {
     } else if (inputKey == INPUT_FILE_PATH) {
         command = `${command} -input_file_path ${input}`;
     } else if (inputKey == INPUT_OUTPUT_PATH) {
+        core.info(`Creating CodeSignTool output path ${input}`);
+        mkdirSync(input);
         command = `${command} -output_dir_path ${input}`;
     } else if (inputKey == INPUT_MALWARE_BLOCK) {
         command = `${command} -malware_block=${input}`;
     }
     return command;
+}
+
+export function replaceEnv(input: string): string {
+    const variables = process.env;
+    for (const envKey in variables) {
+        // @ts-ignore
+        input = input.replace('${' + envKey + '}', variables[envKey]);
+    }
+    return input;
 }
 
 export function userShell(): string {
