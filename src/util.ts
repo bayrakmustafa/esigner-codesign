@@ -105,7 +105,7 @@ export function inputCommands(): string {
 }
 
 export function setCommand(inputKey: string, command: string): string {
-    const input = replaceEnv(core.getInput(inputKey));
+    let input = replaceEnv(core.getInput(inputKey));
     if (input == '') {
         return command;
     }
@@ -121,8 +121,10 @@ export function setCommand(inputKey: string, command: string): string {
     } else if (inputKey == INPUT_PROGRAM_NAME) {
         command = `${command} -program_name ${input}`;
     } else if (inputKey == INPUT_FILE_PATH) {
+        input = input.replace('/', path.sep);
         command = `${command} -input_file_path ${input}`;
     } else if (inputKey == INPUT_OUTPUT_PATH) {
+        input = input.replace('/', path.sep);
         if (fs.existsSync(input)) {
             core.info(`CodeSignTool output path ${input} already exist`);
         } else {
