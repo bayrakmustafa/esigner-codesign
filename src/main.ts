@@ -28,7 +28,8 @@ async function run(): Promise<void> {
             result.stdout.includes('Exception') ||
             result.stdout.includes('Missing required option')
         ) {
-            core.setFailed('\nSomething Went Wrong. Please try again.');
+            core.info('');
+            core.setFailed('Something Went Wrong. Please try again.');
             return;
         }
 
