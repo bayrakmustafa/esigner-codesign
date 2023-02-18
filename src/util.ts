@@ -121,10 +121,10 @@ export function setCommand(inputKey: string, command: string): string {
     } else if (inputKey == INPUT_PROGRAM_NAME) {
         command = `${command} -program_name ${input}`;
     } else if (inputKey == INPUT_FILE_PATH) {
-        input = input.replace('/', path.sep);
+        input = path.normalize(input);
         command = `${command} -input_file_path ${input}`;
     } else if (inputKey == INPUT_OUTPUT_PATH) {
-        input = input.replace('/', path.sep);
+        input = path.normalize(input);
         if (fs.existsSync(input)) {
             core.info(`CodeSignTool output path ${input} already exist`);
         } else {
