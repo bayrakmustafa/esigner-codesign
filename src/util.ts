@@ -1,4 +1,3 @@
-import { mkdirSync } from 'fs';
 import os, { userInfo } from 'os';
 import path from 'path';
 import * as fs from 'fs';
@@ -128,7 +127,7 @@ export function setCommand(inputKey: string, command: string): string {
             core.info(`CodeSignTool output path ${input} already exist`);
         } else {
             core.info(`Creating CodeSignTool output path ${input}`);
-            mkdirSync(input);
+            fs.mkdirSync(input);
         }
         command = `${command} -output_dir_path ${input}`;
     } else if (inputKey == INPUT_MALWARE_BLOCK) {

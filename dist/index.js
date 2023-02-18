@@ -90,7 +90,10 @@ function run() {
             const result = yield exec.getExecOutput(command);
             if (result.stdout.includes('Error') ||
                 result.stdout.includes('Exception') ||
-                result.stdout.includes('Missing required option')) {
+                result.stdout.includes('Missing required option') ||
+                result.stderr.includes('Error') ||
+                result.stderr.includes('Exception') ||
+                result.stderr.includes('Missing required option')) {
                 core.info('');
                 core.setFailed('Something Went Wrong. Please try again.');
                 return;
@@ -585,7 +588,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.userShell = exports.replaceEnv = exports.setCommand = exports.inputCommands = exports.listFiles = exports.getPlatform = exports.getToolCachePath = exports.isVersionSatisfies = exports.getDownloadArchiveExtension = exports.extractZip = exports.extractJdkFile = exports.getTempDir = void 0;
-const fs_1 = __nccwpck_require__(7147);
 const os_1 = __importStar(__nccwpck_require__(2037));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const fs = __importStar(__nccwpck_require__(7147));
@@ -710,7 +712,7 @@ function setCommand(inputKey, command) {
         }
         else {
             core.info(`Creating CodeSignTool output path ${input}`);
-            (0, fs_1.mkdirSync)(input);
+            fs.mkdirSync(input);
         }
         command = `${command} -output_dir_path ${input}`;
     }
