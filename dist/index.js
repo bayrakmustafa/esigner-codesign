@@ -192,6 +192,7 @@ class CodeSigner {
             const shellCmd = (0, util_1.userShell)();
             core.info(`Shell Cmd: ${shellCmd}`);
             execCmd = shellCmd + ' ' + execCmd;
+            execCmd = execCmd.trimStart().trimEnd();
             return execCmd;
         });
     }
@@ -738,7 +739,7 @@ function userShell() {
     const { env } = process;
     const platform = getPlatform();
     if (platform == constants_1.WINDOWS) {
-        return env.COMSPEC || 'cmd.exe';
+        return env.COMSPEC || '';
     }
     try {
         const shell = (0, os_1.userInfo)();

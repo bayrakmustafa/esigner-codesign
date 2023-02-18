@@ -56,6 +56,7 @@ export class CodeSigner {
         const shellCmd = userShell();
         core.info(`Shell Cmd: ${shellCmd}`);
         execCmd = shellCmd + ' ' + execCmd;
+        execCmd = execCmd.trimStart().trimEnd();
         return execCmd;
     }
 }
