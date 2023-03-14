@@ -1,13 +1,11 @@
-import exp from 'constants';
-
 export const MACOS_JAVA_CONTENT_POSTFIX = 'Contents/Home';
 
 export const UNIX = 'UNIX';
 export const MACOS = 'MACOS';
 export const WINDOWS = 'WINDOWS';
 
-export const CODESIGNTOOL_WINDOWS_SETUP = 'https://www.ssl.com/download/codesigntool-for-windows/';
-export const CODESIGNTOOL_UNIX_SETUP = 'https://www.ssl.com/download/codesigntool-for-linux-and-macos/';
+export const CODESIGNTOOL_WINDOWS_SETUP = 'https://github.com/SSLcom/CodeSignTool/releases/download/v1.2.7/CodeSignTool-v1.2.7.zip';
+export const CODESIGNTOOL_UNIX_SETUP = 'https://github.com/SSLcom/CodeSignTool/releases/download/v1.2.7/CodeSignTool-v1.2.7-windows.zip';
 
 export const CODESIGNTOOL_WINDOWS_CMD = 'CodeSignTool.bat';
 export const CODESIGNTOOL_UNIX_CMD = 'CodeSignTool.sh';
