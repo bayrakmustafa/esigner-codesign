@@ -4,8 +4,10 @@ export const UNIX = 'UNIX';
 export const MACOS = 'MACOS';
 export const WINDOWS = 'WINDOWS';
 
-export const CODESIGNTOOL_WINDOWS_SETUP = 'https://github.com/SSLcom/CodeSignTool/releases/download/v1.2.7/CodeSignTool-v1.2.7.zip';
-export const CODESIGNTOOL_UNIX_SETUP = 'https://github.com/SSLcom/CodeSignTool/releases/download/v1.2.7/CodeSignTool-v1.2.7-windows.zip';
+export const CODESIGNTOOL_WINDOWS_SETUP =
+    'https://github.com/SSLcom/CodeSignTool/releases/download/v1.2.7/CodeSignTool-v1.2.7.zip';
+export const CODESIGNTOOL_UNIX_SETUP =
+    'https://github.com/SSLcom/CodeSignTool/releases/download/v1.2.7/CodeSignTool-v1.2.7-windows.zip';
 
 export const CODESIGNTOOL_WINDOWS_CMD = 'CodeSignTool.bat';
 export const CODESIGNTOOL_UNIX_CMD = 'CodeSignTool.sh';
