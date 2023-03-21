@@ -1,4 +1,4 @@
-name: 'action-codesigner'
+name: 'esigner-codesign'
 
 on: [push]
 

@@ -5,9 +5,9 @@ import fs, { copyFileSync, mkdirSync } from 'fs';
 import os from 'os';
 import path from 'path';
 import {
-    CODESIGNTOOL_UNIX_CMD,
+    CODESIGNTOOL_UNIX_RUN_CMD,
     CODESIGNTOOL_UNIX_SETUP,
-    CODESIGNTOOL_WINDOWS_CMD,
+    CODESIGNTOOL_WINDOWS_RUN_CMD,
     CODESIGNTOOL_WINDOWS_SETUP,
     PRODUCTION_ENVIRONMENT_NAME,
     INPUT_ENVIRONMENT_NAME,
@@ -21,7 +21,7 @@ export class CodeSigner {
 
     public async setup(): Promise<string> {
         let link = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_SETUP : CODESIGNTOOL_UNIX_SETUP;
-        let cmd = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_CMD : CODESIGNTOOL_UNIX_CMD;
+        let cmd = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_RUN_CMD : CODESIGNTOOL_UNIX_RUN_CMD;
         core.info(`Downloading CodeSignTool from ${link}`);
 
         const codesigner = path.join(os.homedir(), 'codesign');
