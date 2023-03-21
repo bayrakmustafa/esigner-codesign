@@ -40,9 +40,11 @@ async function run(): Promise<void> {
             result.stdout.includes('Error') ||
             result.stdout.includes('Exception') ||
             result.stdout.includes('Missing required option') ||
+            result.stdout.includes('Unmatched arguments from') ||
             result.stderr.includes('Error') ||
             result.stderr.includes('Exception') ||
-            result.stderr.includes('Missing required option')
+            result.stderr.includes('Missing required option') ||
+            result.stderr.includes('Unmatched arguments from')
         ) {
             core.info('');
             core.setFailed('Something Went Wrong. Please try again.');

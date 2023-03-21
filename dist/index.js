@@ -103,14 +103,16 @@ function run() {
                 const workingDir = path_1.default.dirname(command);
                 const logsDir = path_1.default.join(workingDir, 'logs');
                 fs_1.default.rmSync(logsDir, { recursive: true, force: true });
-                core.info("CodeSigner logs folder is deleted");
+                core.info('CodeSigner logs folder is deleted');
             }
             if (result.stdout.includes('Error') ||
                 result.stdout.includes('Exception') ||
                 result.stdout.includes('Missing required option') ||
+                result.stdout.includes('Unmatched arguments from') ||
                 result.stderr.includes('Error') ||
                 result.stderr.includes('Exception') ||
-                result.stderr.includes('Missing required option')) {
+                result.stderr.includes('Missing required option') ||
+                result.stderr.includes('Unmatched arguments from')) {
                 core.info('');
                 core.setFailed('Something Went Wrong. Please try again.');
                 return;
