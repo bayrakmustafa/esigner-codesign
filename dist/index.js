@@ -101,8 +101,9 @@ function run() {
             const clean_logs = core.getBooleanInput(constants_1.INPUT_CLEAN_LOGS);
             if (clean_logs) {
                 const workingDir = path_1.default.dirname(command);
-                const logsDir = path_1.default.join(workingDir, "logs");
+                const logsDir = path_1.default.join(workingDir, 'logs');
                 fs_1.default.rmSync(logsDir, { recursive: true, force: true });
+                core.info("CodeSigner logs folder is deleted");
             }
             if (result.stdout.includes('Error') ||
                 result.stdout.includes('Exception') ||
@@ -707,23 +708,23 @@ function setCommand(inputKey, command) {
         return command;
     }
     if (inputKey == constants_1.INPUT_USERNAME) {
-        command = `${command} -username ${input}`;
+        command = `${command} -username=${input}`;
     }
     else if (inputKey == constants_1.INPUT_PASSWORD) {
-        command = `${command} -password ${input}`;
+        command = `${command} -password=${input}`;
     }
     else if (inputKey == constants_1.INPUT_CREDENTIAL_ID) {
-        command = `${command} -credential_id ${input}`;
+        command = `${command} -credential_id=${input}`;
     }
     else if (inputKey == constants_1.INPUT_TOTP_SECRET) {
-        command = `${command} -totp_secret ${input}`;
+        command = `${command} -totp_secret=${input}`;
     }
     else if (inputKey == constants_1.INPUT_PROGRAM_NAME) {
-        command = `${command} -program_name ${input}`;
+        command = `${command} -program_name=${input}`;
     }
     else if (inputKey == constants_1.INPUT_FILE_PATH) {
         input = path_1.default.normalize(input);
-        command = `${command} -input_file_path ${input}`;
+        command = `${command} -input_file_path=${input}`;
     }
     else if (inputKey == constants_1.INPUT_OUTPUT_PATH) {
         input = path_1.default.normalize(input);
@@ -734,13 +735,13 @@ function setCommand(inputKey, command) {
             core.info(`Creating CodeSignTool output path ${input}`);
             fs.mkdirSync(input);
         }
-        command = `${command} -output_dir_path ${input}`;
+        command = `${command} -output_dir_path=${input}`;
     }
     else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
-        command = `${command} -malware_block ${input}`;
+        command = `${command} -malware_block=${input}`;
     }
     else if (inputKey == constants_1.INPUT_OVERRIDE) {
-        command = `${command} -override ${input}`;
+        command = `${command} -override=${input}`;
     }
     return command;
 }

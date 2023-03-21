@@ -33,6 +33,7 @@ async function run(): Promise<void> {
             const workingDir = path.dirname(command);
             const logsDir = path.join(workingDir, 'logs');
             fs.rmSync(logsDir, { recursive: true, force: true });
+            core.info('CodeSigner logs folder is deleted');
         }
 
         if (
