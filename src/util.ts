@@ -10,6 +10,7 @@ import {
     INPUT_FILE_PATH,
     INPUT_MALWARE_BLOCK,
     INPUT_OUTPUT_PATH,
+    INPUT_OVERRIDE,
     INPUT_PASSWORD,
     INPUT_PROGRAM_NAME,
     INPUT_TOTP_SECRET,
@@ -100,6 +101,7 @@ export function inputCommands(): string {
     command = setCommand(INPUT_PROGRAM_NAME, command);
     command = setCommand(INPUT_FILE_PATH, command);
     command = setCommand(INPUT_OUTPUT_PATH, command);
+    command = setCommand(INPUT_OVERRIDE, command);
     command = setCommand(INPUT_MALWARE_BLOCK, command);
     return command;
 }
@@ -134,6 +136,8 @@ export function setCommand(inputKey: string, command: string): string {
         command = `${command} -output_dir_path ${input}`;
     } else if (inputKey == INPUT_MALWARE_BLOCK) {
         command = `${command} -malware_block=${input}`;
+    } else if (inputKey == INPUT_OVERRIDE) {
+        command = `${command} -override=${input}`;
     }
     return command;
 }
