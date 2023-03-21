@@ -135,9 +135,9 @@ export function setCommand(inputKey: string, command: string): string {
         }
         command = `${command} -output_dir_path ${input}`;
     } else if (inputKey == INPUT_MALWARE_BLOCK) {
-        command = `${command} -malware_block=${input}`;
+        command = `${command} -malware_block ${input}`;
     } else if (inputKey == INPUT_OVERRIDE) {
-        command = `${command} -override=${input}`;
+        command = `${command} -override ${input}`;
     }
     return command;
 }

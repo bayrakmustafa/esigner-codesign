@@ -1,6 +1,10 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 
+import fs from 'fs';
+import path from 'path';
+import { INPUT_CLEAN_LOGS } from './constants';
+
 import { CodeSigner } from './setup-codesigner/codesigner';
 import { JavaDistribution } from './setup-jdk/installer';
 import { inputCommands } from './util';
@@ -23,6 +27,14 @@ async function run(): Promise<void> {
         await distribution.setup();
 
         const result = await exec.getExecOutput(command);
+
+        const clean_logs = core.getBooleanInput(INPUT_CLEAN_LOGS);
+        if (clean_logs) {
+            const workingDir = path.dirname(command);
+            const logsDir = path.join(workingDir, 'logs');
+            fs.rmSync(logsDir, { recursive: true, force: true });
+        }
+
         if (
             result.stdout.includes('Error') ||
             result.stdout.includes('Exception') ||

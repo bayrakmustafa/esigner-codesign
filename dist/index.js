@@ -7,7 +7,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SANDBOX_ENVIRONMENT_NAME = exports.PRODUCTION_ENVIRONMENT_NAME = exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_OVERRIDE = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_RUN_CMD = exports.CODESIGNTOOL_WINDOWS_RUN_CMD = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.CODESIGNTOOL_VERSION = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
+exports.SANDBOX_ENVIRONMENT_NAME = exports.PRODUCTION_ENVIRONMENT_NAME = exports.INPUT_ENVIRONMENT_NAME = exports.INPUT_CLEAN_LOGS = exports.INPUT_OVERRIDE = exports.INPUT_MALWARE_BLOCK = exports.INPUT_OUTPUT_PATH = exports.INPUT_FILE_PATH = exports.INPUT_PROGRAM_NAME = exports.INPUT_TOTP_SECRET = exports.INPUT_CREDENTIAL_ID = exports.INPUT_PASSWORD = exports.INPUT_USERNAME = exports.INPUT_COMMAND = exports.CODESIGNTOOL_UNIX_RUN_CMD = exports.CODESIGNTOOL_WINDOWS_RUN_CMD = exports.CODESIGNTOOL_UNIX_SETUP = exports.CODESIGNTOOL_WINDOWS_SETUP = exports.CODESIGNTOOL_VERSION = exports.WINDOWS = exports.MACOS = exports.UNIX = exports.MACOS_JAVA_CONTENT_POSTFIX = void 0;
 exports.MACOS_JAVA_CONTENT_POSTFIX = 'Contents/Home';
 exports.UNIX = 'UNIX';
 exports.MACOS = 'MACOS';
@@ -27,6 +27,7 @@ exports.INPUT_FILE_PATH = 'file_path';
 exports.INPUT_OUTPUT_PATH = 'output_path';
 exports.INPUT_MALWARE_BLOCK = 'malware_block';
 exports.INPUT_OVERRIDE = 'override';
+exports.INPUT_CLEAN_LOGS = 'clean_logs';
 exports.INPUT_ENVIRONMENT_NAME = 'environment_name';
 exports.PRODUCTION_ENVIRONMENT_NAME = 'PROD';
 exports.SANDBOX_ENVIRONMENT_NAME = 'TEST';
@@ -71,9 +72,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
+const fs_1 = __importDefault(__nccwpck_require__(7147));
+const path_1 = __importDefault(__nccwpck_require__(1017));
+const constants_1 = __nccwpck_require__(5105);
 const codesigner_1 = __nccwpck_require__(6598);
 const installer_1 = __nccwpck_require__(2507);
 const util_1 = __nccwpck_require__(4024);
@@ -91,6 +98,12 @@ function run() {
             const distribution = new installer_1.JavaDistribution();
             yield distribution.setup();
             const result = yield exec.getExecOutput(command);
+            const clean_logs = core.getBooleanInput(constants_1.INPUT_CLEAN_LOGS);
+            if (clean_logs) {
+                const workingDir = path_1.default.dirname(command);
+                const logsDir = path_1.default.join(workingDir, "logs");
+                fs_1.default.rmSync(logsDir, { recursive: true, force: true });
+            }
             if (result.stdout.includes('Error') ||
                 result.stdout.includes('Exception') ||
                 result.stdout.includes('Missing required option') ||
@@ -724,10 +737,10 @@ function setCommand(inputKey, command) {
         command = `${command} -output_dir_path ${input}`;
     }
     else if (inputKey == constants_1.INPUT_MALWARE_BLOCK) {
-        command = `${command} -malware_block=${input}`;
+        command = `${command} -malware_block ${input}`;
     }
     else if (inputKey == constants_1.INPUT_OVERRIDE) {
-        command = `${command} -override=${input}`;
+        command = `${command} -override ${input}`;
     }
     return command;
 }

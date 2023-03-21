@@ -21,6 +21,7 @@ export const INPUT_FILE_PATH = 'file_path';
 export const INPUT_OUTPUT_PATH = 'output_path';
 export const INPUT_MALWARE_BLOCK = 'malware_block';
 export const INPUT_OVERRIDE = 'override';
+export const INPUT_CLEAN_LOGS = 'clean_logs';
 export const INPUT_ENVIRONMENT_NAME = 'environment_name';
 
 export const PRODUCTION_ENVIRONMENT_NAME = 'PROD';
