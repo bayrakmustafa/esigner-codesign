@@ -103,7 +103,7 @@ function run() {
                 const workingDir = path_1.default.dirname(command);
                 const logsDir = path_1.default.join(workingDir, 'logs');
                 fs_1.default.rmSync(logsDir, { recursive: true, force: true });
-                core.info('CodeSigner logs folder is deleted');
+                core.info(`CodeSigner logs folder is deleted: ${logsDir}`);
             }
             if (result.stdout.includes('Error') ||
                 result.stdout.includes('Exception') ||
