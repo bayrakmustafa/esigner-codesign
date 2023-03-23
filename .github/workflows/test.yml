@@ -60,6 +60,11 @@ jobs:
         os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Create Input file for test signing
+        shell: bash
+        run: |
+          echo 'Write-Output -InputObject "Happy Signing From ESigner.com!"' > ${GITHUB_WORKSPACE}/example/${{env.FILE_NAME}}
+
       - uses: bayrakmustafa/esigner-codesign@main
         with:
           command: sign

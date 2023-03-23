@@ -86,7 +86,7 @@ export function getPlatform(): string {
 export function listFiles(path: string): void {
     const files = fs.readdirSync(path);
     files.forEach(file => {
-        core.info(`File: ${file}`);
+        core.debug(`File: ${file}`);
     });
 }
 

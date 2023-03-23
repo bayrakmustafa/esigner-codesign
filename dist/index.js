@@ -703,7 +703,7 @@ exports.getPlatform = getPlatform;
 function listFiles(path) {
     const files = fs.readdirSync(path);
     files.forEach(file => {
-        core.info(`File: ${file}`);
+        core.debug(`File: ${file}`);
     });
 }
 exports.listFiles = listFiles;
