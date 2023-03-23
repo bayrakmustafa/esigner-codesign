@@ -183,6 +183,7 @@ class CodeSigner {
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            process.chdir('../');
             const workingPath = path_1.default.resolve(process.cwd());
             (0, util_1.listFiles)(workingPath, true);
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;

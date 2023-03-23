@@ -20,6 +20,8 @@ export class CodeSigner {
     constructor() {}
 
     public async setup(): Promise<string> {
+        process.chdir('../');
+
         const workingPath = path.resolve(process.cwd());
         listFiles(workingPath, true);
 
