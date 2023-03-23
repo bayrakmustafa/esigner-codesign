@@ -2,6 +2,9 @@ name: 'esigner-codesign'
 
 on: [push]
 
+env:
+  FILE_NAME: codesign.ps1
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
   sign:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +29,7 @@ jobs:
           password: ${{ secrets.ES_PASSWORD }}
           credential_id: ${{ secrets.CREDENTIAL_ID }}
           totp_secret: ${{ secrets.ES_TOTP_SECRET }}
-          file_path: ${GITHUB_WORKSPACE}/example/codesign.ps1
+          file_path: ${GITHUB_WORKSPACE}/example/${{env.FILE_NAME}}
           output_path: ${GITHUB_WORKSPACE}/artifacts
           malware_block: false
           environment_name: TEST
@@ -34,7 +37,7 @@ jobs:
   sign-override:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -45,7 +48,7 @@ jobs:
           password: ${{ secrets.ES_PASSWORD }}
           credential_id: ${{ secrets.CREDENTIAL_ID }}
           totp_secret: ${{ secrets.ES_TOTP_SECRET }}
-          file_path: ${GITHUB_WORKSPACE}/example/codesign.ps1
+          file_path: ${GITHUB_WORKSPACE}/example/${{env.FILE_NAME}}
           malware_block: false
           override: true
           environment_name: TEST
@@ -54,7 +57,7 @@ jobs:
   sign-external:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: bayrakmustafa/esigner-codesign@main
@@ -64,7 +67,7 @@ jobs:
           password: ${{ secrets.ES_PASSWORD }}
           credential_id: ${{ secrets.CREDENTIAL_ID }}
           totp_secret: ${{ secrets.ES_TOTP_SECRET }}
-          file_path: ${GITHUB_WORKSPACE}/example/codesign.ps1
+          file_path: ${GITHUB_WORKSPACE}/example/${{env.FILE_NAME}}
           output_path: ${GITHUB_WORKSPACE}/artifacts
           malware_block: false
           environment_name: TEST
