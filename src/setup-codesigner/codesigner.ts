@@ -44,7 +44,7 @@ export class CodeSigner {
         const sourceConfig =
             environment == PRODUCTION_ENVIRONMENT_NAME
                 ? path.join(workingPath, 'conf/code_sign_tool.properties')
-                : path.join(archivePath, 'conf/code_sign_tool_demo.properties');
+                : path.join(workingPath, 'conf/code_sign_tool_demo.properties');
         const destConfig = path.join(archivePath, 'conf/code_sign_tool.properties');
 
         core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
