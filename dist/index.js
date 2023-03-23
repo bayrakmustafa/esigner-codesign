@@ -1,6 +1,25 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 88:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CODESIGNTOOL_DEMO_PROPERTIES = exports.CODESIGNTOOL_PROPERTIES = void 0;
+exports.CODESIGNTOOL_PROPERTIES = 'CLIENT_ID=kaXTRACNijSWsFdRKg_KAfD3fqrBlzMbWs6TwWHwAn8\n' +
+    'OAUTH2_ENDPOINT=https://login.ssl.com/oauth2/token\n' +
+    'CSC_API_ENDPOINT=https://cs.ssl.com\n' +
+    'TSA_URL=http://ts.ssl.com';
+exports.CODESIGNTOOL_DEMO_PROPERTIES = 'CLIENT_ID=qOUeZCCzSqgA93acB3LYq6lBNjgZdiOxQc-KayC3UMw\n' +
+    'OAUTH2_ENDPOINT=https://oauth-sandbox.ssl.com/oauth2/token\n' +
+    'CSC_API_ENDPOINT=https://cs-try.ssl.com\n' +
+    'TSA_URL=http://ts.ssl.com';
+
+
+/***/ }),
+
 /***/ 5105:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -177,6 +196,7 @@ const tc = __importStar(__nccwpck_require__(7784));
 const fs_1 = __importStar(__nccwpck_require__(7147));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const constants_1 = __nccwpck_require__(5105);
+const config_1 = __nccwpck_require__(88);
 const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
     constructor() { }
@@ -199,12 +219,10 @@ class CodeSigner {
             core.info(`Archive name: ${archiveName}, ${archivePath}`);
             (0, util_1.listFiles)(archivePath);
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
-            const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
-                ? path_1.default.join(workingPath, 'conf/code_sign_tool.properties')
-                : path_1.default.join(workingPath, 'conf/code_sign_tool_demo.properties');
+            const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME ? config_1.CODESIGNTOOL_PROPERTIES : config_1.CODESIGNTOOL_DEMO_PROPERTIES;
             const destConfig = path_1.default.join(archivePath, 'conf/code_sign_tool.properties');
-            core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
-            (0, fs_1.copyFileSync)(sourceConfig, destConfig);
+            core.info(`Write CodeSignTool config file ${sourceConfig} to ${destConfig}`);
+            (0, fs_1.writeFileSync)(destConfig, sourceConfig, { encoding: 'utf-8', flag: 'w' });
             core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
             process.env['CODE_SIGN_TOOL_PATH'] = archivePath;
             let execCmd = path_1.default.join(archivePath, cmd);

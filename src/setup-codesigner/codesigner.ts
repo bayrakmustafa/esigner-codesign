@@ -1,8 +1,7 @@
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 
-import fs, { copyFileSync, mkdirSync } from 'fs';
-import os from 'os';
+import fs, { mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
 import {
     CODESIGNTOOL_UNIX_RUN_CMD,
@@ -13,6 +12,7 @@ import {
     INPUT_ENVIRONMENT_NAME,
     WINDOWS
 } from '../constants';
+import { CODESIGNTOOL_PROPERTIES, CODESIGNTOOL_DEMO_PROPERTIES } from '../config';
 
 import { extractZip, getPlatform, listFiles, userShell } from '../util';
 
@@ -41,14 +41,11 @@ export class CodeSigner {
         listFiles(archivePath);
 
         const environment = core.getInput(INPUT_ENVIRONMENT_NAME) ?? PRODUCTION_ENVIRONMENT_NAME;
-        const sourceConfig =
-            environment == PRODUCTION_ENVIRONMENT_NAME
-                ? path.join(workingPath, 'conf/code_sign_tool.properties')
-                : path.join(workingPath, 'conf/code_sign_tool_demo.properties');
+        const sourceConfig = environment == PRODUCTION_ENVIRONMENT_NAME ? CODESIGNTOOL_PROPERTIES : CODESIGNTOOL_DEMO_PROPERTIES;
         const destConfig = path.join(archivePath, 'conf/code_sign_tool.properties');
 
-        core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
-        copyFileSync(sourceConfig, destConfig);
+        core.info(`Write CodeSignTool config file ${sourceConfig} to ${destConfig}`);
+        writeFileSync(destConfig, sourceConfig, { encoding: 'utf-8', flag: 'w' });
 
         core.info(`Set CODE_SIGN_TOOL_PATH env variable: ${archivePath}`);
         process.env['CODE_SIGN_TOOL_PATH'] = archivePath;

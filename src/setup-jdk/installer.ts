@@ -64,8 +64,7 @@ export class JavaDistribution extends JavaBase {
             console.time('corretto-retrieve-available-versions');
         }
 
-        const availableVersionsUrl =
-            'https://corretto.github.io/corretto-downloads/latest_links/indexmap_with_checksum.json';
+        const availableVersionsUrl = 'https://corretto.github.io/corretto-downloads/latest_links/indexmap_with_checksum.json';
         const fetchCurrentVersions = await this.http.getJson<ICorrettoAllAvailableVersions>(availableVersionsUrl);
         const fetchedCurrentVersions = fetchCurrentVersions.result;
         if (!fetchedCurrentVersions) {

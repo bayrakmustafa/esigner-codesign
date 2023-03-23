@@ -9,8 +9,7 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "package": "ncc build --source-map --license licenses.txt",
-    "copy-files": "cp -r ./conf ./dist/. && cp -r ./example ./dist/.",
-    "all": "npm run copy-files && npm run build && npm run package && npm run format"
+    "all": "npm run build && npm run package && npm run format"
   },
   "repository": {
     "type": "git",
