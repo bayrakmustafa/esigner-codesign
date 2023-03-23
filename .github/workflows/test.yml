@@ -63,6 +63,7 @@ jobs:
       - name: Create Input file for test signing
         shell: bash
         run: |
+          mkdir -p${GITHUB_WORKSPACE}/example
           echo 'Write-Output -InputObject "Happy Signing From ESigner.com!"' > ${GITHUB_WORKSPACE}/example/${{env.FILE_NAME}}
 
       - uses: bayrakmustafa/esigner-codesign@main
