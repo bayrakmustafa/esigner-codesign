@@ -83,13 +83,11 @@ export function getPlatform(): string {
     }
 }
 
-export function listFiles(path: string, debug: boolean = false): void {
+export function listFiles(path: string): void {
     const files = fs.readdirSync(path);
-    if (debug) {
-        files.forEach(file => {
-            core.info(`File: ${file}`);
-        });
-    }
+    files.forEach(file => {
+        core.info(`File: ${file}`);
+    });
 }
 
 export function inputCommands(): string {

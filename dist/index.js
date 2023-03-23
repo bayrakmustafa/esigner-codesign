@@ -183,9 +183,8 @@ class CodeSigner {
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            process.chdir('../');
             const workingPath = path_1.default.resolve(process.cwd());
-            (0, util_1.listFiles)(workingPath, true);
+            (0, util_1.listFiles)(workingPath);
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
             let cmd = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_RUN_CMD : constants_1.CODESIGNTOOL_UNIX_RUN_CMD;
             core.info(`Downloading CodeSignTool from ${link}`);
@@ -198,7 +197,7 @@ class CodeSigner {
             const archiveName = fs_1.default.readdirSync(extractedCodeSignPath)[0];
             const archivePath = path_1.default.join(extractedCodeSignPath, archiveName);
             core.info(`Archive name: ${archiveName}, ${archivePath}`);
-            (0, util_1.listFiles)(archivePath, true);
+            (0, util_1.listFiles)(archivePath);
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
                 ? path_1.default.join(workingPath, 'conf/code_sign_tool.properties')
@@ -683,13 +682,11 @@ function getPlatform() {
     }
 }
 exports.getPlatform = getPlatform;
-function listFiles(path, debug = false) {
+function listFiles(path) {
     const files = fs.readdirSync(path);
-    if (debug) {
-        files.forEach(file => {
-            core.info(`File: ${file}`);
-        });
-    }
+    files.forEach(file => {
+        core.info(`File: ${file}`);
+    });
 }
 exports.listFiles = listFiles;
 function inputCommands() {
