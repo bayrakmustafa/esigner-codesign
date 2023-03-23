@@ -180,11 +180,12 @@ const path_1 = __importDefault(__nccwpck_require__(1017));
 const constants_1 = __nccwpck_require__(5105);
 const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
-    constructor() {
-    }
+    constructor() { }
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            const workingDir = path_1.default.resolve();
+            (0, util_1.listFiles)(workingDir, true);
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
             let cmd = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_RUN_CMD : constants_1.CODESIGNTOOL_UNIX_RUN_CMD;
             core.info(`Downloading CodeSignTool from ${link}`);
@@ -197,7 +198,7 @@ class CodeSigner {
             const archiveName = fs_1.default.readdirSync(extractedCodeSignPath)[0];
             const archivePath = path_1.default.join(extractedCodeSignPath, archiveName);
             core.info(`Archive name: ${archiveName}, ${archivePath}`);
-            (0, util_1.listFiles)(archivePath);
+            (0, util_1.listFiles)(archivePath, true);
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
                 ? path_1.default.join(archivePath, 'conf/code_sign_tool.properties')
