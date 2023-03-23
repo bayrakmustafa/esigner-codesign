@@ -687,7 +687,7 @@ function listFiles(path, debug = false) {
     const files = fs.readdirSync(path);
     if (debug) {
         files.forEach(file => {
-            core.debug(`File: ${file}`);
+            core.info(`File: ${file}`);
         });
     }
 }

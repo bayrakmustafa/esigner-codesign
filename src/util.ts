@@ -87,7 +87,7 @@ export function listFiles(path: string, debug: boolean = false): void {
     const files = fs.readdirSync(path);
     if (debug) {
         files.forEach(file => {
-            core.debug(`File: ${file}`);
+            core.info(`File: ${file}`);
         });
     }
 }
