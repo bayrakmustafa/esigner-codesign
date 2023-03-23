@@ -183,8 +183,8 @@ class CodeSigner {
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const workingDir = path_1.default.resolve(process.cwd());
-            (0, util_1.listFiles)(workingDir, true);
+            const workingPath = path_1.default.resolve(process.cwd());
+            (0, util_1.listFiles)(workingPath, true);
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
             let cmd = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_RUN_CMD : constants_1.CODESIGNTOOL_UNIX_RUN_CMD;
             core.info(`Downloading CodeSignTool from ${link}`);
@@ -200,7 +200,7 @@ class CodeSigner {
             (0, util_1.listFiles)(archivePath, true);
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
-                ? path_1.default.join(archivePath, 'conf/code_sign_tool.properties')
+                ? path_1.default.join(workingPath, 'conf/code_sign_tool.properties')
                 : path_1.default.join(archivePath, 'conf/code_sign_tool_demo.properties');
             const destConfig = path_1.default.join(archivePath, 'conf/code_sign_tool.properties');
             core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);

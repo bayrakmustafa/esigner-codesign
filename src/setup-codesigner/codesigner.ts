@@ -20,8 +20,8 @@ export class CodeSigner {
     constructor() {}
 
     public async setup(): Promise<string> {
-        const workingDir = path.resolve(process.cwd());
-        listFiles(workingDir, true);
+        const workingPath = path.resolve(process.cwd());
+        listFiles(workingPath, true);
 
         let link = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_SETUP : CODESIGNTOOL_UNIX_SETUP;
         let cmd = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_RUN_CMD : CODESIGNTOOL_UNIX_RUN_CMD;
@@ -43,7 +43,7 @@ export class CodeSigner {
         const environment = core.getInput(INPUT_ENVIRONMENT_NAME) ?? PRODUCTION_ENVIRONMENT_NAME;
         const sourceConfig =
             environment == PRODUCTION_ENVIRONMENT_NAME
-                ? path.join(archivePath, 'conf/code_sign_tool.properties')
+                ? path.join(workingPath, 'conf/code_sign_tool.properties')
                 : path.join(archivePath, 'conf/code_sign_tool_demo.properties');
         const destConfig = path.join(archivePath, 'conf/code_sign_tool.properties');
 
