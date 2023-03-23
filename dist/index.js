@@ -175,7 +175,6 @@ exports.CodeSigner = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const fs_1 = __importStar(__nccwpck_require__(7147));
-const os_1 = __importDefault(__nccwpck_require__(2037));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const constants_1 = __nccwpck_require__(5105);
 const util_1 = __nccwpck_require__(4024);
@@ -184,12 +183,12 @@ class CodeSigner {
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const workingDir = path_1.default.resolve();
+            const workingDir = path_1.default.resolve(process.cwd());
             (0, util_1.listFiles)(workingDir, true);
             let link = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_SETUP : constants_1.CODESIGNTOOL_UNIX_SETUP;
             let cmd = (0, util_1.getPlatform)() == constants_1.WINDOWS ? constants_1.CODESIGNTOOL_WINDOWS_RUN_CMD : constants_1.CODESIGNTOOL_UNIX_RUN_CMD;
             core.info(`Downloading CodeSignTool from ${link}`);
-            const codesigner = path_1.default.join(os_1.default.homedir(), 'codesign');
+            const codesigner = path_1.default.resolve(process.cwd(), 'codesign');
             core.info(`Creating CodeSignTool extract path ${codesigner}`);
             (0, fs_1.mkdirSync)(codesigner);
             const downloadedFile = yield tc.downloadTool(link);

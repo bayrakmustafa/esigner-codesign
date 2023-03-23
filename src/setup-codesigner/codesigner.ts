@@ -20,14 +20,14 @@ export class CodeSigner {
     constructor() {}
 
     public async setup(): Promise<string> {
-        const workingDir = path.resolve();
+        const workingDir = path.resolve(process.cwd());
         listFiles(workingDir, true);
 
         let link = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_SETUP : CODESIGNTOOL_UNIX_SETUP;
         let cmd = getPlatform() == WINDOWS ? CODESIGNTOOL_WINDOWS_RUN_CMD : CODESIGNTOOL_UNIX_RUN_CMD;
         core.info(`Downloading CodeSignTool from ${link}`);
 
-        const codesigner = path.join(os.homedir(), 'codesign');
+        const codesigner = path.resolve(process.cwd(), 'codesign');
         core.info(`Creating CodeSignTool extract path ${codesigner}`);
         mkdirSync(codesigner);
 
