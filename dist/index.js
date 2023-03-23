@@ -180,7 +180,8 @@ const path_1 = __importDefault(__nccwpck_require__(1017));
 const constants_1 = __nccwpck_require__(5105);
 const util_1 = __nccwpck_require__(4024);
 class CodeSigner {
-    constructor() { }
+    constructor() {
+    }
     setup() {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -199,8 +200,8 @@ class CodeSigner {
             (0, util_1.listFiles)(archivePath);
             const environment = (_a = core.getInput(constants_1.INPUT_ENVIRONMENT_NAME)) !== null && _a !== void 0 ? _a : constants_1.PRODUCTION_ENVIRONMENT_NAME;
             const sourceConfig = environment == constants_1.PRODUCTION_ENVIRONMENT_NAME
-                ? 'conf/code_sign_tool.properties'
-                : 'conf/code_sign_tool_demo.properties';
+                ? path_1.default.join(archivePath, 'conf/code_sign_tool.properties')
+                : path_1.default.join(archivePath, 'conf/code_sign_tool_demo.properties');
             const destConfig = path_1.default.join(archivePath, 'conf/code_sign_tool.properties');
             core.info(`Copy CodeSignTool config file ${sourceConfig} to ${destConfig}`);
             (0, fs_1.copyFileSync)(sourceConfig, destConfig);
