@@ -45,7 +45,7 @@ inputs:
   environment_name:
     description: ""
     required: false
-    default: "PROD"
+    default: "TEST"
 runs:
   using: 'node16'
   main: 'dist/index.js'
